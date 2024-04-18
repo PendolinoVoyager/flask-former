@@ -3,6 +3,8 @@ from mongoengine import Document, StringField, EmbeddedDocumentListField
 from .Component import Component
 class Form(Document):
     name = StringField(required=True, max_length=200)
+    description = StringField(max_length=500)
+    image = StringField(max_length=200)
     components = EmbeddedDocumentListField(Component, max_length=99)
     key = StringField(required=True, max_length=64)
     

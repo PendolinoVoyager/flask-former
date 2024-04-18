@@ -56,11 +56,19 @@ class FormController:
             return {"status": "fail", "message": "form is required"}, 400
         if body.get('name') is  None:
             return {"status": "fail", "message": "name is required"}, 400
+        
         if body.get('components') is None or len(body.get('components')) == 0:
             return {"status": "fail", "message": "components are required"}, 400
+        
         for component in body['components']:
             if component['type'] not in AVAILABLE_COMPONENTS:
                 return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
+        if not request.files['image']:
+            body['image'] = 'placeholder.png'
+        else:
+            #TODO: save image in static folder
+            body['image'] = 'placeholder.png'
+            
         form = Form(name=body['name'], components=body['components'], key=body['key'])
         Form.save(form)
         return {"status": "success", "data": form.to_json()}, 201

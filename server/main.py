@@ -18,6 +18,12 @@ env = os.getenv('ENV')
 db_connect(os.getenv('DB_URI'))
 
 app.register_blueprint(v1_router)
+app.static_folder = './public'
+
+@app.route('/images/<path>', methods=['GET'])
+def get_image(path):
+    print(path)
+    return app.send_static_file(path)
 
 @app.errorhandler(404)
 def handle404(e):
