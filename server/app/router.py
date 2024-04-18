@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from .formController import FormController
-
+import json
 v1_router = Blueprint('user', __name__, url_prefix='/api/v1')
 #This file contains route definitions for /api/v1. Route actions in FormController
 
@@ -14,6 +14,7 @@ def get_all_forms():
 @v1_router.route('/forms/<form_id>', methods=['GET'])
 def get_form(form_id):
     res, status = FormController.get_form(request, form_id)
+
     return jsonify(res), status
 
 # Create and publish a new form

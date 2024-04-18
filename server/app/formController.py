@@ -1,4 +1,5 @@
 from .db.Form import Form
+from .db.Component import AVAILABLE_COMPONENTS
 RESULTS_PER_PAGE = 10
 
 def error_wrapper(action):
@@ -17,9 +18,9 @@ class FormController:
         page = request.args.get('page')
         if not page:
             page = 1
-        
         forms = Form.objects().skip((int(page) - 1) * RESULTS_PER_PAGE).limit(RESULTS_PER_PAGE)
-        return {"status": "success", "length": len(forms), "data": forms.to_json()}, 200
+        data = [form.to_json() for form in forms]
+        return {"status": "success", "length": len(forms), "data": data}, 200
 
     @staticmethod
     @error_wrapper
@@ -28,7 +29,7 @@ class FormController:
         if not form:
             return {"status": "fail", "message": "Not found"}, 404
 
-        return {"status": "success", "data": form.to_json()}, 200
+        return {"status": "success", "data": form.to_mongo()}, 200
     
     @staticmethod
     @error_wrapper
@@ -43,13 +44,26 @@ class FormController:
         if not name:
             return {"status": "fail", "message": "query parameter 'name' is required"}, 400
         
-        data = Form.objects(name__icontains=name).skip((int(page) - 1) * RESULTS_PER_PAGE).limit(RESULTS_PER_PAGE)
-        return {"status": "success", "length": len(data), "data": data.to_json()}, 200
+        forms = Form.objects(name__icontains=name).skip((int(page) - 1) * RESULTS_PER_PAGE).limit(RESULTS_PER_PAGE)
+        data = [form.to_json() for form in forms]
+        return {"status": "success", "length": len(data), "data": data}, 200
     
     @staticmethod
     @error_wrapper
     def create_form(request):
-        return {"status": "fail", "message": "not implemented"}, 501
+        body = request.json.get('form')
+        if body is None:
+            return {"status": "fail", "message": "form is required"}, 400
+        if body.get('name') is  None:
+            return {"status": "fail", "message": "name is required"}, 400
+        if body.get('components') is None or len(body.get('components')) == 0:
+            return {"status": "fail", "message": "components are required"}, 400
+        for component in body['components']:
+            if component['type'] not in AVAILABLE_COMPONENTS:
+                return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
+        form = Form(name=body['name'], components=body['components'], key=body['key'])
+        Form.save(form)
+        return {"status": "success", "data": form.to_json()}, 201
     
     @staticmethod
     @error_wrapper
