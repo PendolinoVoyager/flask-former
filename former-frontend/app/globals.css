@@ -20,7 +20,7 @@ ol {
 }
 .divider {
   width: 1px;
-  height: 1rem;
+  height: 1.1em;
   border-left: none;
   border: solid 1px gray;
 }

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import classes from "./MainNav.module.css";
 import { PATH } from "@/app/paths";
+import NavItem from "./NavItem";
 export default function MainNav() {
+  
   return (
     <nav className={classes["main-nav"]}>
       <ul>
@@ -14,13 +16,13 @@ export default function MainNav() {
         </li>
         <li className="divider" />
         <li>
-          <Link href={PATH.ALL_FORMS}>Explore</Link>
+          <NavItem href={PATH.ALL_FORMS}>Explore</NavItem>
         </li>
         <li>
-          <Link href={PATH.CREATE}>Create</Link>
+          <NavItem href={PATH.CREATE}>Create</NavItem>
         </li>
         <li>
-          <Link href={PATH.BOOKMARKS}>Bookmarks</Link>
+          <NavItem href={PATH.BOOKMARKS}>Bookmarks</NavItem>
         </li>
       </ul>
     </nav>

@@ -9,6 +9,7 @@ def connect(uri):
         exit(1)
 
     print(f'\x1b[6;30;42mConnected to MongoDB on {uri}\x1b[0m')
+    return connection
 
 def disconnect():
     mongo_disconnect()

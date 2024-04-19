@@ -1,5 +1,5 @@
 from http.client import HTTPException
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from dotenv import load_dotenv
 from app.router import v1_router
 from app.db.db_init import connect as db_connect
@@ -12,8 +12,8 @@ if __name__ == '__main__':
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = bytes(os.getenv('SECRET'), 'utf-8')
-env = os.getenv('ENV')
+app.config["SECRET"] = bytes(os.getenv('SECRET'), 'utf-8')
+app.config["ENV"] = os.getenv('ENV')
 
 db_connect(os.getenv('DB_URI'))
 
@@ -22,7 +22,6 @@ app.static_folder = './public'
 
 @app.route('/images/<path>', methods=['GET'])
 def get_image(path):
-    print(path)
     return app.send_static_file(path)
 
 @app.errorhandler(404)

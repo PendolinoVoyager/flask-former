@@ -1,5 +1,6 @@
 from .db.Form import Form
 from .db.Component import AVAILABLE_COMPONENTS
+from .Hasher import Hasher
 RESULTS_PER_PAGE = 10
 
 def error_wrapper(action):
@@ -68,7 +69,7 @@ class FormController:
         else:
             #TODO: save image in static folder
             body['image'] = 'placeholder.png'
-            
+        
         form = Form(name=body['name'], components=body['components'], key=body['key'])
         Form.save(form)
         return {"status": "success", "data": form.to_json()}, 201
