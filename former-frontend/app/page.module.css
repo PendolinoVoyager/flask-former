@@ -1,0 +1,98 @@
+.mainHeader {
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 1em;
+  color: var(--color-primary);
+}
+.sections {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+.sectionContent {
+  flex-grow: 10;
+  max-width: 50%;
+}
+.sections h2 {
+  font-size: 3rem;
+  animation: slideleft 0.5s forwards;
+  margin-bottom: 2rem;
+}
+.sections p {
+  font-size: 1.5rem;
+  animation: slideright 0.5s forwards;
+  margin-bottom: 2rem;
+  margin-left: 5rem;
+}
+
+.mainImage {
+  flex-grow: 1;
+  max-height: 400px;
+  max-width: 400px;
+
+  animation: slideright 0.5s forwards;
+  z-index: 2;
+}
+.mainImage img {
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 6px 6px 4px -4px rgba(0, 0, 0, 0.2);
+}
+.stagger {
+  margin-inline: 0 auto;
+}
+@keyframes slideright {
+  from {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes slideleft {
+  from {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 700px breakpoint */
+@media screen and (max-width: 700px) {
+  .mainHeader {
+    font-size: 2rem;
+  }
+  .sections {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sections * {
+    max-width: 100%;
+  }
+  .sections * p {
+    max-width: 100%;
+    margin-inline: 0;
+    font-size: 1.3rem;
+  }
+  .sections h2 {
+    font-size: 2rem;
+  }
+  .mainImage {
+    margin-top: 1rem;
+    width: 100%;
+    height: 300px;
+    margin-bottom: 1rem;
+  }
+  .mainImage img {
+    transform: translateX(0);
+  }
+}
