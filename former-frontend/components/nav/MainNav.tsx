@@ -1,16 +1,22 @@
 import Link from "next/link";
 import classes from "./MainNav.module.css";
 import { PATH } from "@/app/paths";
+import Image from "next/image";
 import NavItem from "./NavItem";
 export default function MainNav() {
-  
   return (
     <nav className={classes["main-nav"]}>
       <ul>
-        <li>
+        <li className={classes.logo}>
           <Link href={PATH.HOME}>
             <div>
-              <p>LOGO/HOME</p>
+              <Image
+                src="/logo.svg"
+                alt="logo"
+                width={50}
+                height={50}
+                priority
+              />
             </div>
           </Link>
         </li>

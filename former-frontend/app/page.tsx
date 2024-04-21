@@ -1,11 +1,6 @@
-import MainNav from "@/components/nav/MainNav";
-
 export default function Home() {
   return (
     <>
-      <header>
-        <MainNav />
-      </header>
       <h1>TODO</h1>
       <ul>
         <li>Main page: home</li>
