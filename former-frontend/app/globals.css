@@ -54,3 +54,22 @@ main {
   border-left: none;
   border: solid 1px var(--color-primary);
 }
+.notFound h1,
+.error h1 {
+  font-size: 3rem;
+  color: var(--color-danger);
+  text-align: center;
+  margin-top: 2rem;
+}
+.notFound p,
+.error p {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

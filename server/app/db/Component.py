@@ -78,5 +78,43 @@ class FloatField(Component):
             "label": self.label,
             "default_value": self.default_value
         }
+class DateField(Component):
+    type = "date"
+    def __init__(self, label, default_value):
+        super().__init__()
+        self.label = label
+        self.default_value = default_value
+    def JSON_serialize(self):
+        return {
+            "type": "date",
+            "label": self.label,
+            "default_value": self.default_value
+        }
+class TimeField(Component):
+    type = "time"
+    def __init__(self, label, default_value):
+        super().__init__()
+        self.label = label
+        self.default_value = default_value
+    def JSON_serialize(self):
+        return {
+            "type": "time",
+            "label": self.label,
+            "default_value": self.default_value
+        }
 
-AVAILABLE_COMPONENTS = ["text", "checkbox", "radio", "number", "float"]
+class DateTimeField(Component):
+    type = "datetime"
+    def __init__(self, label, default_value):
+        super().__init__()
+        self.label = label
+        self.default_value = default_value
+    def JSON_serialize(self):
+        return {
+            "type": "datetime",
+            "label": self.label,
+            "default_value": self.default_value
+        }
+AVAILABLE_COMPONENTS = ["text", "checkbox", "radio",
+                        "number", "float", "date", "time",
+                         "datetime", "predefined"]
