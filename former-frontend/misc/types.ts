@@ -1,8 +1,8 @@
 type Form = {
-  _id: { $oid: string };
+  id: string,
   name: string;
   description: string;
   image: string;
-  created: { $date: EpochTimeStamp };
+  created: EpochTimeStamp,
   components: any[];
 };

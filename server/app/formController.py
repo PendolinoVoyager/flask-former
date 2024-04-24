@@ -1,6 +1,7 @@
 from .db.Form import Form
-from .db.Component import AVAILABLE_COMPONENTS
+from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
+import os
 RESULTS_PER_PAGE = 10
 
 def error_wrapper(action):
@@ -8,6 +9,8 @@ def error_wrapper(action):
         try:
             return action(*args, **kwargs)
         except Exception as e:
+            if os.getenv('ENV') == 'development':  
+                print(e)
             return {'status': "fail", "message": str(e)}, 400
     return wrapper
 
@@ -60,17 +63,23 @@ class FormController:
         
         if body.get('components') is None or len(body.get('components')) == 0:
             return {"status": "fail", "message": "components are required"}, 400
-        
+        components = []
         for component in body['components']:
             if component['type'] not in AVAILABLE_COMPONENTS:
                 return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
-        if not request.files['image']:
-            body['image'] = 'placeholder.png'
-        else:
-            #TODO: save image in static folder
-            body['image'] = 'placeholder.png'
-        
-        form = Form(name=body['name'], components=body['components'], key=body['key'])
+            components.append(ComponentFactory.from_type(component['type'], **component))
+
+        # if not request.files['image']:
+        body['image'] = 'placeholder.png'
+        # else:
+        #     filename = request.files['image'].filename
+        #     print(filename)
+        #     body['image'] = 'placeholder.png'
+        if body.get('key') is not None:
+            body['key'] = Hasher.hash(body['key'])
+        body['components'] = components
+        print(body.get('components'))
+        form = Form(**body)
         Form.save(form)
         return {"status": "success", "data": form.to_json()}, 201
     
@@ -83,7 +92,7 @@ class FormController:
         form = Form.objects(id=form_id).first()
         if not form:
             return {"status": "fail", "message": "not found"}, 404
-        if form.key != key:
+        if not Hasher.verify(form.key, key):
             return {"status": "fail", "message": "unauthorized - wrong key"}, 401
         form.delete()
         return {"status": "success", "message": "deleted"}, 200

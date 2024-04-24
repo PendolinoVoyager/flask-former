@@ -28,6 +28,7 @@
 }
 
 .mainImage {
+  position: relative;
   flex-grow: 1;
   max-height: 400px;
   max-width: 400px;

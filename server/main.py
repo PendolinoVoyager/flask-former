@@ -30,6 +30,11 @@ def handle404(e):
 
 @app.errorhandler(Exception)
 def handleException(e):
+    if os.getenv('ENV') == 'development':
+        print(e)
+    else:
+        #todo: log error
+        pass
     if isinstance(e, HTTPException):
         return jsonify({"status": "fail", "message": str(e)}), e.code
     return jsonify({"status": "fail", "message": "Internal server error"}), 500

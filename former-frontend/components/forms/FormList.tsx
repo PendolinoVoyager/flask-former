@@ -2,18 +2,22 @@
 import { notFound } from "next/navigation";
 import FormCard from "./FormCard";
 interface FormListProps {
+  title?: string;
   forms: Form[];
 }
 
-export default function FormList({ forms }: FormListProps) {
+export default function FormList({ forms, title }: FormListProps) {
   if (!forms || forms.length === 0) {
     notFound();
   }
   return (
-    <ul>
-      {forms.map((form) => (
-        <FormCard key={form._id.$oid} form={form} />
-      ))}
-    </ul>
+    <>
+      {title && <h2>{title}</h2>}
+      <ul>
+        {forms.map((form) => (
+          <FormCard key={form.ido} form={form} />
+        ))}
+      </ul>
+    </>
   );
 }

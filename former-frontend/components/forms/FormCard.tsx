@@ -5,7 +5,7 @@ export default function FormCard({ form }: { form: Form }) {
     <div className="card">
       <h2>{form.name}</h2>
       <p>{form.description}</p>
-      <Link href={`/form/${form._id.$oid}`}>View</Link>
+      <Link href={`/form/${form.id}`}>View</Link>
     </div>
   );
 }
