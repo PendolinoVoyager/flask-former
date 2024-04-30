@@ -15,7 +15,7 @@ export default function FormList({ forms, title }: FormListProps) {
       {title && <h2>{title}</h2>}
       <ul>
         {forms.map((form) => (
-          <FormCard key={form.ido} form={form} />
+          <FormCard key={form.id} form={form} />
         ))}
       </ul>
     </>

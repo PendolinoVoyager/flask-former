@@ -61,25 +61,20 @@ class NumberComponent(Component):
     def __init__(self, label, default_value, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = label
+        self.min = kwargs.get('min', None)
+        self.max = kwargs.get('max', None)
+        self.is_integer = kwargs.get('is_integer', False)
         self.default_value = default_value
     def JSON_serialize(self):
         return {
             "type": "number",
             "label": self.label,
-            "default_value": self.default_value
+            "default_value": self.default_value,
+            "min": self.min,
+            "max": self.max,
+            "is_integer": self.is_integer
         }
-class FloatComponent(Component):
-    type = "float"
-    def __init__(self, label, default_value, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.label = label
-        self.default_value = default_value
-    def JSON_serialize(self):
-        return {
-            "type": "float",
-            "label": self.label,
-            "default_value": self.default_value
-        }
+
 class DateComponent(Component):
     type = "date"
     def __init__(self, label, default_value, *args, **kwargs):
@@ -119,7 +114,7 @@ class DateTimeComponent(Component):
         }
 
 AVAILABLE_COMPONENTS = ["text", "checkbox", "radio",
-                        "number", "float", "date", "time",
+                        "number", "date", "time",
                          "datetime"]
 class ComponentFactory:
     REQUIRED_FIELDS = ["label"]

@@ -1,8 +1,9 @@
 from .db.Form import Form
 from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
+from globals import G_CONFIG
 import os
-RESULTS_PER_PAGE = 10
+
 
 def error_wrapper(action):
     def wrapper(*args, **kwargs):
@@ -63,22 +64,37 @@ class FormController:
         
         if body.get('components') is None or len(body.get('components')) == 0:
             return {"status": "fail", "message": "components are required"}, 400
+
         components = []
+        
         for component in body['components']:
             if component['type'] not in AVAILABLE_COMPONENTS:
                 return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
             components.append(ComponentFactory.from_type(component['type'], **component))
 
-        # if not request.files['image']:
-        body['image'] = 'placeholder.png'
-        # else:
-        #     filename = request.files['image'].filename
-        #     print(filename)
-        #     body['image'] = 'placeholder.png'
+        if not body['image']:
+            body['image'] = 'placeholder.png'
+        else:
+            try:
+                # image is a JSON blob so we need to extract it from the request
+                imagefile = flask.request.files.get('image', '')
+                if imagefile:
+                    #slugify the filename
+                    imagefile.filename = slugify(imagefile.filename)
+                    #add timestamp to the filename
+                    imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
+                    imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
+                    body['image'] = imagefile.filename
+                else:
+                    body['image'] = 'placeholder.png'
+    
+            except Exception as e:
+                body['image'] = 'placeholder.png'
+
         if body.get('key') is not None:
             body['key'] = Hasher.hash(body['key'])
+
         body['components'] = components
-        print(body.get('components'))
         form = Form(**body)
         Form.save(form)
         return {"status": "success", "data": form.to_json()}, 201
