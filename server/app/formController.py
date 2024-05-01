@@ -2,6 +2,7 @@ from .db.Form import Form
 from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
 from globals import G_CONFIG
+RESULTS_PER_PAGE = G_CONFIG['RESULTS_PER_PAGE']
 import os
 
 
@@ -71,24 +72,21 @@ class FormController:
             if component['type'] not in AVAILABLE_COMPONENTS:
                 return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
             components.append(ComponentFactory.from_type(component['type'], **component))
-
-        if not body['image']:
+        print(body.get('image'))
+        if body.get('image') is None:
             body['image'] = 'placeholder.png'
         else:
-            try:
-                # image is a JSON blob so we need to extract it from the request
-                imagefile = flask.request.files.get('image', '')
-                if imagefile:
-                    #slugify the filename
-                    imagefile.filename = slugify(imagefile.filename)
-                    #add timestamp to the filename
-                    imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
-                    imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
-                    body['image'] = imagefile.filename
-                else:
-                    body['image'] = 'placeholder.png'
-    
-            except Exception as e:
+            # image is a JSON blob so we need to extract it from the request
+            imagefile = request.files.get('image')
+            if imagefile:
+                # #slugify the filename
+                # imagefile.filename = slugify(imagefile.filename)
+                # #add timestamp to the filename
+                # imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
+                # imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
+                # body['image'] = imagefile.filename
+                pass
+            else:
                 body['image'] = 'placeholder.png'
 
         if body.get('key') is not None:

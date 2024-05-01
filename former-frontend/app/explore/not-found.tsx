@@ -1,9 +1,9 @@
 export default function NoFormsFound() {
   return (
     <div className="notFound">
-      <h1>No forms found</h1>
+      <h1>Nothing here!sa</h1>
       <p>
-        Which is weird. Please reloading the page or check Internet connection.
+        Which is weird. Please reload the page or check Internet connection.
       </p>
     </div>
   );

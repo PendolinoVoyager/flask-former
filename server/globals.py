@@ -8,4 +8,5 @@ G_CONFIG = {
     "DB_URI": os.getenv('DB_URI'),
     "STATIC_DIR": os.path.join(os.getcwd(), os.getenv("STATIC_DIR")),
     "RESULTS_PER_PAGE": 10,
+    "WEBSITE_HOST": os.getenv('WEBSITE_HOST'),
 }

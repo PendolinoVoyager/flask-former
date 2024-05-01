@@ -1,0 +1,19 @@
+.form-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: min(100%, 400px);
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--color-white);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.form-card * {
+  z-index: 2;
+}
+.form-card img {
+  z-index: 1;
+}

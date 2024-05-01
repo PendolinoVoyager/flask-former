@@ -1,5 +1,4 @@
-"use client";
-import { notFound } from "next/navigation";
+import Spinner from "../UI/Spinner";
 import FormCard from "./FormCard";
 interface FormListProps {
   title?: string;
@@ -8,7 +7,7 @@ interface FormListProps {
 
 export default function FormList({ forms, title }: FormListProps) {
   if (!forms || forms.length === 0) {
-    notFound();
+    return <Spinner />;
   }
   return (
     <>
