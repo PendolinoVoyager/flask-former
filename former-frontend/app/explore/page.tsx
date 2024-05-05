@@ -4,9 +4,8 @@ import FormExplorer from "@/components/forms/FormExplorer";
 export default function ExplorePage() {
   return (
     <div>
-      <h1>Explore</h1>
-      <p>Explore the world of former</p>
-      <hr />
+      <h1>Search for forms</h1>
+
       <Suspense fallback={<Spinner />}>
         <FormExplorer />
       </Suspense>

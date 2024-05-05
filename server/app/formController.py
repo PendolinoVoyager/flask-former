@@ -35,7 +35,7 @@ class FormController:
         if not form:
             return {"status": "fail", "message": "Not found"}, 404
 
-        return {"status": "success", "data": form.to_mongo()}, 200
+        return {"status": "success", "data": form.to_json()}, 200
     
     @staticmethod
     @error_wrapper

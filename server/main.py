@@ -11,7 +11,7 @@ app.config["SECRET"] = G_CONFIG["SECRET"]
 app.config["ENV"] = G_CONFIG["ENV"]
 app.static_folder = G_CONFIG["STATIC_DIR"]
 
-cors = CORS(app, resources={r"/api/v1/*": {"origins": G_CONFIG["WEBSITE_HOST"]}})
+cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 CORS(app, resources={r"/images/*": {"origins": G_CONFIG["WEBSITE_HOST"]}})
 db_connect(os.getenv('DB_URI'))
 app.register_blueprint(v1_router)

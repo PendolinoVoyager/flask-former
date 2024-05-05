@@ -4,14 +4,14 @@
   margin: 0;
 }
 html {
-  --color-primary: #007bff;
+  --color-primary: #d13b00;
   --color-secondary: #6c757d;
   --color-success: #28a745;
   --color-danger: #dc3545;
   --color-warning: #ffc107;
   --color-info: #17a2b8;
   --color-text: #343a40;
-  --color-background: #f8f9fa;
+  --color-background: #faf8f8;
 }
 .dark html {
   --color-text: #f8f9fa;
@@ -72,4 +72,8 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+h1 {
+  color: var(--color-primary);
+  font-size: 3rem;
 }

@@ -1,4 +1,4 @@
-type Form = {
+export type Form = {
   id: string;
   name: string;
   description: string;
@@ -6,7 +6,7 @@ type Form = {
   created: EpochTimeStamp;
   components: any[];
 };
-type Component = {
+export type Component = {
   label: string;
   default_value: unknown;
   min: undefined | number;
