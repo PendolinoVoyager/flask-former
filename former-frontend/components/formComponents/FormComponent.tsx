@@ -1,14 +1,11 @@
 import React from "react";
-import { FormComponentType, ComponentType } from "@/misc/types";
+import { FormComponentType, ComponentType, ComponentMode } from "@/misc/types";
 import TextComponent from "./textComponent/TextComponent"; // Adjust the import path as necessary
 import NumberComponent from "./numberComponent/NumberComponent"; // Similar imports for Number and other components
 import CheckBoxComponent from "./checkBoxComponent/CheckBoxComponent";
-
-type Mode = "edit" | "static" | "answer";
-
 type FormComponentProps = {
   component: FormComponentType;
-  mode: Mode;
+  mode: ComponentMode;
 };
 
 export default function FormComponent({
@@ -19,11 +16,10 @@ export default function FormComponent({
   switch (component.type) {
     case ComponentType.Text:
       return <TextComponent mode={mode} {...component} />;
-    // case ComponentType.Number:
-    //   return <NumberComponent mode={mode} {...component} />;
-    // case ComponentType.CheckBox:
-    //   return <CheckBoxComponent mode={mode} {...component} />;
-    // Add cases for other component types as needed
+    case ComponentType.Number:
+      return <NumberComponent mode={mode} {...component} />;
+    case ComponentType.CheckBox:
+      return <CheckBoxComponent mode={mode} {...component} />;
     default:
       return null;
   }

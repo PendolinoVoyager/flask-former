@@ -1,6 +1,9 @@
 /* Base styles for all components */
 .component {
   margin: 10px 0;
+  border: 2px dashed #ccc;
+  padding: 10px;
+  position: relative;
 }
 
 .label {
@@ -9,26 +12,49 @@
   display: block;
 }
 
-.input {
+.input,
+.numberInput,
+.answerInput,
+.text,
+.number {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #bebebe;
   border-radius: 4px;
 }
 
 .text,
 .number {
-  padding: 8px;
   background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
 .answerInput {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #007bff;
+  border: 1px solid var(--color-info);
+}
+
+/* Styles specific to editing mode */
+.editing .label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editing .editIcon {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.editing .editField {
+  display: block;
+  margin-top: 5px;
   border-radius: 4px;
+  border: 1px dashed var(--color-info);
+  padding: 0.25rem;
+  width: 80%;
+}
+
+.editing .input {
+  border-color: #007bff;
 }
 
 /* Checkbox specific styles */
@@ -46,8 +72,26 @@
 }
 
 .answerCheckbox {
-  margin-bottom: 5px;
   border: 1px solid #007bff;
-  border-radius: 4px;
   padding: 5px;
+}
+
+.optionControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.optionButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.optionButton.remove {
+  background-color: #ff4d4d;
 }

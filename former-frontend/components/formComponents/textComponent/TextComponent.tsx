@@ -1,13 +1,11 @@
 import React from "react";
-import { TextComponent as ITextComponent } from "@/misc/types";
+import { ComponentMode, TextComponent as ITextComponent } from "@/misc/types";
 import TextComponentEdit from "./TextComponentEdit";
 import TextComponentStatic from "./TextComponentStatic";
 import TextComponentAnswer from "./TextComponentAnswer";
 
-type Mode = "edit" | "static" | "answer";
-
 interface BaseTextComponentProps extends ITextComponent {
-  mode: Mode;
+  mode: ComponentMode;
 }
 
 const TextComponent: React.FC<BaseTextComponentProps> = ({
@@ -15,11 +13,11 @@ const TextComponent: React.FC<BaseTextComponentProps> = ({
   ...props
 }) => {
   switch (mode) {
-    case "edit":
+    case ComponentMode.edit:
       return <TextComponentEdit {...props} />;
-    case "static":
+    case ComponentMode.static:
       return <TextComponentStatic {...props} />;
-    case "answer":
+    case ComponentMode.answer:
       return <TextComponentAnswer {...props} />;
     default:
       return null;

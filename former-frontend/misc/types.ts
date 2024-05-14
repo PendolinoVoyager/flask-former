@@ -81,3 +81,9 @@ export function createFormComponent(
       throw new Error(`Unsupported component type: ${componentType}`);
   }
 }
+
+export enum ComponentMode {
+  "edit",
+  "static",
+  "answer",
+}

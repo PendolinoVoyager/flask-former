@@ -1,25 +1,30 @@
 import React from "react";
-import { NumberComponent as INumberComponent } from "@/misc/types";
+import {
+  ComponentMode,
+  NumberComponent as INumberComponent,
+} from "@/misc/types";
+import NumberComponentEdit from "./NumberComponentEdit";
+import NumberComponentStatic from "./NumberComponentStatic";
+import NumberComponentAnswer from "./NumberComponentAnswer";
 
-const NumberComponent: React.FC<INumberComponent> = ({
-  label,
-  defaultValue,
-  min,
-  max,
-  isInteger,
+interface BaseNumberComponentProps extends INumberComponent {
+  mode: ComponentMode;
+}
+
+const TextComponent: React.FC<BaseNumberComponentProps> = ({
+  mode,
+  ...props
 }) => {
-  return (
-    <div>
-      <label>{label}</label>
-      <input
-        type="number"
-        defaultValue={defaultValue}
-        min={min}
-        max={max}
-        step={isInteger ? 1 : "any"}
-      />
-    </div>
-  );
+  switch (mode) {
+    case ComponentMode.edit:
+      return <NumberComponentEdit {...props} />;
+    case ComponentMode.static:
+      return <NumberComponentStatic {...props} />;
+    case ComponentMode.answer:
+      return <NumberComponentAnswer {...props} />;
+    default:
+      return null;
+  }
 };
 
-export default NumberComponent;
+export default TextComponent;

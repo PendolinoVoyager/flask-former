@@ -1,5 +1,6 @@
 "use client";
 import {
+  ComponentMode,
   ComponentType,
   FormComponentType,
   createFormComponent,
@@ -49,7 +50,11 @@ export default function FormConstructor() {
       <DndContext>
         <div className={classes.constructorCore}>
           {formComponents.map(({ id, component }) => (
-            <FormComponent key={id} component={component} mode="edit" />
+            <FormComponent
+              key={id}
+              component={component}
+              mode={ComponentMode.edit}
+            />
           ))}
         </div>
       </DndContext>
