@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   width: 100%;
   margin: 0;
+  gap: 1rem;
 }
 .form-card {
   position: relative;
@@ -16,10 +17,13 @@
   margin: 0 auto;
   padding: 1rem;
   border-radius: 1rem;
-  background-color: var(--color-white);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-background-secondary);
+  box-shadow: var(--shadow);
+  transition: transform 0.1s ease-in-out;
 }
-
+.form-card:hover {
+  transform: rotate(3deg);
+}
 .form-card-image {
   flex: 2; /* Take up 2/3 of height */
   overflow: hidden; /* Ensure image doesn't overflow */

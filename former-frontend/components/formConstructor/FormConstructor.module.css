@@ -1,0 +1,35 @@
+.constructorCore {
+  min-height: 60vh;
+}
+.header {
+  text-align: center;
+  background-color: var(--color-background);
+}
+.header h2 {
+  margin-bottom: 1rem;
+}
+.btnList {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.spawnComponentButton {
+  border: none;
+  padding: 0.5rem;
+  background-color: var(--color-secondary);
+  min-width: 10rem;
+  color: whitesmoke;
+  font-weight: 600;
+  font-size: 1rem;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  box-shadow: var(--shadow);
+}
+.spawnComponentButton:hover {
+  transform: translateY(-3px);
+  background-color: var(--color-info);
+}

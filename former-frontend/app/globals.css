@@ -5,13 +5,15 @@
 }
 html {
   --color-primary: #d13b00;
-  --color-secondary: #6c757d;
+  --color-secondary: #00c451;
   --color-success: #28a745;
   --color-danger: #dc3545;
   --color-warning: #ffc107;
   --color-info: #17a2b8;
   --color-text: #343a40;
   --color-background: #faf8f8;
+  --color-background-secondary: #eeeeeebb;
+  --shadow: 0.25rem 0.25rem rgba(0, 0, 0, 0.2);
 }
 .dark html {
   --color-text: #f8f9fa;

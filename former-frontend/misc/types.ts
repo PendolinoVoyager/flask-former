@@ -6,10 +6,78 @@ export type Form = {
   created: EpochTimeStamp;
   components: any[];
 };
-export type Component = {
+
+export enum ComponentType {
+  Text = "Text",
+  Number = "Number",
+  Date = "Date",
+  Datetime = "Datetime",
+  Time = "Time",
+  CheckBox = "CheckBox",
+  Radio = "Radio",
+}
+
+export interface Component {
+  type: ComponentType;
   label: string;
-  default_value: unknown;
-  min: undefined | number;
-  max: undefined | number;
-  is_integer: boolean | undefined;
-};
+  defaultValue?: unknown;
+}
+
+export interface TextComponent extends Component {
+  type: ComponentType.Text;
+  defaultValue?: string;
+}
+
+export interface NumberComponent extends Component {
+  type: ComponentType.Number;
+  defaultValue?: number;
+  min?: number;
+  max?: number;
+  isInteger?: boolean;
+}
+
+export interface CheckboxComponent extends Component {
+  type: ComponentType.CheckBox;
+  defaultValue?: number;
+  choices: string[];
+}
+export interface RadioComponent extends Component {
+  type: ComponentType.Radio;
+  defaultValue?: number;
+  choices: string[];
+}
+export type FormComponentType =
+  | TextComponent
+  | NumberComponent
+  | CheckboxComponent
+  | RadioComponent;
+
+export function createFormComponent(
+  componentType: ComponentType
+): FormComponentType {
+  switch (componentType) {
+    case ComponentType.Text:
+      return {
+        type: ComponentType.Text,
+        label: "New Text",
+        defaultValue: "",
+      };
+    case ComponentType.Number:
+      return {
+        type: ComponentType.Number,
+        label: "New Number",
+        defaultValue: 0,
+        isInteger: false,
+      };
+    case ComponentType.CheckBox:
+      return {
+        type: ComponentType.CheckBox,
+        label: "New Checkbox",
+        defaultValue: 0,
+        choices: ["Option 1", "Option 2"],
+      };
+    // Add other cases as necessary
+    default:
+      throw new Error(`Unsupported component type: ${componentType}`);
+  }
+}

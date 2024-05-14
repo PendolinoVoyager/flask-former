@@ -1,0 +1,53 @@
+/* Base styles for all components */
+.component {
+  margin: 10px 0;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.text,
+.number {
+  padding: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.answerInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+}
+
+/* Checkbox specific styles */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox {
+  margin-bottom: 5px;
+}
+
+.checkboxInput {
+  margin-right: 10px;
+}
+
+.answerCheckbox {
+  margin-bottom: 5px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  padding: 5px;
+}

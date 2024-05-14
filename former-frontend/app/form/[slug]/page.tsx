@@ -18,18 +18,26 @@ export default async function FormPage({ params }: _LocalProps) {
   }
   return (
     <div className={classes.formPage}>
-      <Image
-        src={`${IMAGE_URL}/${form.image}`}
-        alt={form.name}
-        priority
-        fill
-        sizes="max-width(100%)"
-      />
-      <p>{form.name}</p>
-      <p>{form.description ?? "No description provided."}</p>
-      <Link href={constructPath(AvailablePaths.ANSWER, form.id)}>
-        <button />
-      </Link>
+      <div className={classes.imageWrapper}>
+        <Image
+          src={`${IMAGE_URL}/${form.image}`}
+          alt={form.name}
+          priority
+          fill
+          sizes="(max-width: 700px), 100vh, 33vw"
+        />
+      </div>
+      <section>
+        <h3 className={classes.name}>{form.name}</h3>
+        <div className={classes.details}>
+          <p className={classes.description}>
+            {form.description ?? "No description provided."}
+          </p>
+          <Link href={constructPath(AvailablePaths.ANSWER, form.id)}>
+            <button className={classes.btnAnswer}>Take the form</button>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
