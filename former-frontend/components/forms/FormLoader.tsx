@@ -1,32 +1,28 @@
 "use client";
 import { fetchForms } from "@/misc/http";
 import FormList from "./FormList";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Spinner from "../UI/Spinner";
 import { Form } from "@/misc/types";
+import { useAsyncLoad } from "@/misc/hooks";
 interface FormLoaderProps {
   query_str?: string;
 }
 export default function FormLoader({ query_str }: FormLoaderProps) {
   //TODO: Cache them results
-  const [forms, setForms] = useState<Form[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    async function load(query: string) {
-      try {
-        setIsError(false);
-        setIsLoading(true);
-        const forms = await fetchForms(query);
-        setForms(forms);
-      } catch (err) {
-        setIsError(true);
-        throw new Error("ADAA");
-      }
-      setIsLoading(false);
-    }
-    load(query_str ?? "");
-  }, [query_str]);
-
-  return isLoading ? <Spinner /> : <FormList forms={forms} />;
+  let fetchFunction = useCallback(fetchForms.bind(null, query_str), [
+    query_str,
+  ]);
+  const { error, isLoading, data } = useAsyncLoad<Form[]>(
+    fetchFunction,
+    query_str
+  );
+  if (error)
+    return (
+      <div className="error">
+        <h1>Ooops! Shitty Python server is down again.</h1>
+        <p>{error.message}</p>
+      </div>
+    );
+  return isLoading ? <Spinner /> : <FormList forms={data} />;
 }

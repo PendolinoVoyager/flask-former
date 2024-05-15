@@ -5,28 +5,45 @@ import {
   FormComponentType,
   createFormComponent,
 } from "@/misc/types";
-import { useState } from "react";
-import FormComponent from "../formComponents/FormComponent";
+import React, { Ref, useContext, useEffect, useRef, useState } from "react";
+import ComponentFactory from "../formComponents/ComponentFactory";
 import classes from "./FormConstructor.module.css";
 import { DndContext } from "@dnd-kit/core";
 import SpawnComponentButton from "./SpawnComponentButton";
-
+import {
+  DispatchActions,
+  FormConstructorContext,
+  FormConstructorProvider,
+} from "@/stores/formConstructorContext";
 export default function FormConstructor() {
-  // State to keep track of added components and their order
-  const [formComponents, setFormComponents] = useState<
-    { id: number; component: FormComponentType }[]
-  >([]);
+  return (
+    <FormConstructorProvider>
+      <FormConstructorInternal />
+    </FormConstructorProvider>
+  );
+}
+function FormConstructorInternal() {
+  const {
+    state: { components },
+    dispatch,
+  } = useContext(FormConstructorContext);
+  const componentRefs = useRef(components.map(() => React.createRef()));
+
+  // Adjust refs array on component changes
+  useEffect(() => {
+    componentRefs.current = components.map(
+      (_, i) => componentRefs.current[i] || React.createRef()
+    );
+  }, [components]);
 
   // Function to handle adding a new component
   const addComponent = (componentType: ComponentType) => {
     const newComponent = createFormComponent(componentType);
-
-    setFormComponents((prevComponents) => [
-      ...prevComponents,
-      { id: formComponents.length, component: newComponent },
-    ]);
+    dispatch({
+      type: DispatchActions.ADD_COMPONENT,
+      payload: { id: components.length, component: newComponent },
+    });
   };
-
   return (
     <>
       <div className={classes.header}>
@@ -49,11 +66,12 @@ export default function FormConstructor() {
 
       <DndContext>
         <div className={classes.constructorCore}>
-          {formComponents.map(({ id, component }) => (
-            <FormComponent
+          {components.map(({ id, component }, index) => (
+            <ComponentFactory
               key={id}
               component={component}
               mode={ComponentMode.edit}
+              ref={componentRefs.current[index] as Ref<HTMLFormElement>}
             />
           ))}
         </div>
