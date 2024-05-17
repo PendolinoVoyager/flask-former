@@ -1,32 +1,86 @@
-import { ComponentType, TextComponent as ITextComponent } from "@/misc/types";
+import {
+  ComponentType,
+  TextComponent as ITextComponent,
+  TextComponent,
+} from "@/misc/types";
 import styles from "../FormComponent.module.css";
-import { Ref, forwardRef } from "react";
+import { Ref, forwardRef, useImperativeHandle } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructor";
 
 const TextComponentEdit = forwardRef(function TextComponentEdit(
   { label, defaultValue }: ITextComponent,
   ref: Ref<HTMLFormElement>
 ) {
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { errors, isValid },
+    getValues,
+  } = useForm({
+    defaultValues: {
+      label: label,
+      defaultValue: defaultValue,
+      type: ComponentType.Text,
+    },
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
+  useImperativeHandle<any, EditComponentHandleInterface<TextComponent>>(
+    ref,
+    () => ({
+      validateComponent: () => {
+        handleSubmit(() => {})();
+      },
+      isValid: () => {
+        return isValid;
+      },
+      getFormData: () => {
+        return getValues() as TextComponent;
+      },
+    })
+  );
+
   return (
-    <form ref={ref} className={`${styles.component} ${styles.editing}`}>
-      <input type="hidden" name="type" value={ComponentType.Text} />
-      <div className={styles.label}>
+    <form
+      ref={ref}
+      onSubmit={handleSubmit(() => {})}
+      className={`${styles.component} ${styles.editing}`}
+    >
+      <input type="hidden" {...register("type")} />
+      <div
+        className={`${styles.label} ${errors.label ? styles.errorField : ""}`}
+      >
         <span>Label</span>
-        <input
-          className={styles.editField}
+        <Controller
           name="label"
-          type="text"
-          defaultValue={label}
-          placeholder="Edit label"
+          control={control}
+          rules={{ required: "Label is required" }}
+          render={({ field }) => (
+            <input
+              className={styles.editField}
+              {...field}
+              type="text"
+              placeholder={errors.label ? errors.label.message : "Edit label"}
+              required
+            />
+          )}
         />
       </div>
       <div>
         <span>Default Value</span>
-        <input
-          className={styles.input}
+        <Controller
           name="defaultValue"
-          type="text"
-          defaultValue={defaultValue}
-          placeholder="Edit default value"
+          control={control}
+          render={({ field }) => (
+            <input
+              className={styles.input}
+              {...field}
+              type="text"
+              placeholder="Edit default value"
+            />
+          )}
         />
       </div>
     </form>

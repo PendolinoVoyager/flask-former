@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, memo } from "react";
 import { FormComponentType, ComponentType, ComponentMode } from "@/misc/types";
 import TextEdit from "./textComponent/TextComponentEdit";
 import TextStatic from "./textComponent/TextComponentStatic";
@@ -12,8 +12,11 @@ type FormComponentProps = {
   mode: ComponentMode;
 };
 
-const ComponentFactory = forwardRef<HTMLFormElement, any>(
-  function ComponentFactory({ component, mode }: FormComponentProps, ref) {
+const ComponentFactory = memo(
+  forwardRef<HTMLFormElement, any>(function ComponentFactory(
+    { component, mode }: FormComponentProps,
+    ref
+  ) {
     switch (mode) {
       case ComponentMode.edit:
         switch (component.type) {
@@ -51,7 +54,7 @@ const ComponentFactory = forwardRef<HTMLFormElement, any>(
       default:
         return null; // Handle unexpected modes
     }
-  }
+  })
 );
 
 export default ComponentFactory;
