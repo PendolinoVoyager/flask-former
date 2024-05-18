@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv("./.env")
 #source the G_CONFIG to prevent cross-imports
 G_CONFIG = {
     "ENV":  os.getenv('ENV'),

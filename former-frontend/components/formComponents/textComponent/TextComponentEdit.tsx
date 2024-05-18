@@ -4,13 +4,13 @@ import {
   TextComponent,
 } from "@/misc/types";
 import styles from "../FormComponent.module.css";
-import { Ref, forwardRef, useImperativeHandle } from "react";
+import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructor";
 
 const TextComponentEdit = forwardRef(function TextComponentEdit(
   { label, defaultValue }: ITextComponent,
-  ref: Ref<HTMLFormElement>
+  ref: ForwardedRef<EditComponentHandleInterface<ComponentType.Text>>
 ) {
   const {
     handleSubmit,
@@ -44,7 +44,7 @@ const TextComponentEdit = forwardRef(function TextComponentEdit(
 
   return (
     <form
-      ref={ref}
+      ref={ref as Ref<HTMLFormElement>}
       onSubmit={handleSubmit(() => {})}
       className={`${styles.component} ${styles.editing}`}
     >

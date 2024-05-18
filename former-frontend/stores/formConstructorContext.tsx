@@ -1,18 +1,27 @@
-import { FormComponentType } from "@/misc/types";
-import React, { createContext, useReducer, ReactNode } from "react";
+import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructor";
+import { ComponentType, FormComponentType } from "@/misc/types";
+import React, { createContext, useReducer, ReactNode, RefObject } from "react";
 //It needs to be FormComponentType, even when empty.
 //When editing the form comes in place it saves a lot of time.
 type FormState = {
-  components: { id: number; component: FormComponentType }[];
+  components: {
+    id: number;
+    component: FormComponentType;
+    ref: RefObject<EditComponentHandleInterface<unknown>>;
+  }[];
 };
 export enum DispatchActions {
   ADD_COMPONENT,
   REMOVE_COMPONENT,
 }
+
 type Action =
   | {
       type: DispatchActions.ADD_COMPONENT;
-      payload: { id: number; component: any };
+      payload: {
+        id: number;
+        component: FormComponentType;
+      };
     }
   | {
       type: DispatchActions.REMOVE_COMPONENT;
@@ -29,7 +38,10 @@ const formReducer = (state: FormState, action: Action): FormState => {
     case DispatchActions.ADD_COMPONENT:
       return {
         ...state,
-        components: [...state.components, action.payload],
+        components: [
+          ...state.components,
+          { ...action.payload, ref: React.createRef() },
+        ],
       };
     case DispatchActions.REMOVE_COMPONENT:
       return {

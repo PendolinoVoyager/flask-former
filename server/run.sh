@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#get env variables
+# Get environment variables
 source .env
 
-
+# Check if Flask is installed
 hasFlask=$(pip list | grep Flask)
 if [ -z "$hasFlask" ]; then
     echo "Flask not found, install?"
@@ -18,7 +18,7 @@ if [ -z "$hasFlask" ]; then
         echo "Failed to install Flask, exiting..."
         exit 1
     fi
-    
 fi
 
-python -m flask --app $APP_NAME run --port $PORT --host $HOST
+# Run the Flask app using the run.py script
+python run.py

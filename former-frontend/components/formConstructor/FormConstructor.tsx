@@ -4,7 +4,7 @@ import {
   ComponentType,
   createFormComponent,
 } from "@/misc/types";
-import React, { Ref, RefObject, useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import ComponentFactory from "../formComponents/ComponentFactory";
 import classes from "./FormConstructor.module.css";
 import { DndContext } from "@dnd-kit/core";
@@ -31,14 +31,6 @@ function FormConstructorInternal() {
     state: { components },
     dispatch,
   } = useContext(FormConstructorContext);
-  const [componentRefs, setComponentRefs] = useState([]);
-
-  // Making a ref for each component.
-  useEffect(() => {
-    setComponentRefs((refs) =>
-      components.map((_, i) => refs[i] || React.createRef())
-    );
-  }, [components]);
 
   // Function to handle adding a new component
   const addComponent = (componentType: ComponentType) => {
@@ -49,14 +41,12 @@ function FormConstructorInternal() {
     });
   };
   const handleSubmit = function () {
-    componentRefs.forEach(
-      (ref: RefObject<EditComponentHandleInterface<unknown>>) => {
-        if (ref.current == null) return;
-        ref.current.validateComponent();
-        console.log(ref.current.isValid());
-        console.log(ref.current.getFormData());
-      }
-    );
+    components.forEach(({ ref }) => {
+      if (ref.current == null) return;
+      ref.current.validateComponent();
+      console.log(ref.current.isValid());
+      console.log(ref.current.getFormData());
+    });
   };
   return (
     <>
@@ -64,12 +54,12 @@ function FormConstructorInternal() {
 
       <DndContext>
         <div className={classes.constructorCore}>
-          {components.map(({ id, component }, index) => (
+          {components.map(({ id, component, ref }) => (
             <ComponentFactory
               key={id}
               component={component}
               mode={ComponentMode.edit}
-              ref={componentRefs[index] as Ref<HTMLFormElement>}
+              ref={ref}
             />
           ))}
         </div>

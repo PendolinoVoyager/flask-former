@@ -1,9 +1,11 @@
-from mongoengine import EmbeddedDocument, StringField, ListField, IntField, FloatField, BooleanField
+from mongoengine import EmbeddedDocument, StringField, ListField, IntField, FloatField, BooleanField, DateField, DateTimeField
+import datetime
 #abstract class to represent a component
 class Component(EmbeddedDocument):
     meta = {'allow_inheritance': True}
     label = StringField(required=True, max_length=200)
     type = StringField(required=True, max_length=50)
+    required = BooleanField(required=False, default=False)
     type = "abstract"
     def JSON_serialize(self):
         raise NotImplementedError("Method not implemented")
@@ -82,22 +84,48 @@ class NumberComponent(Component):
 
 class DateComponent(Component):
     type = "date"
+    default_value = DateField()
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
+        super().__init__(**kwargs)
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', None)
+        self.default_value = self.validate_date(kwargs.get('default_value'))
+
+    @staticmethod
+    def validate_date(value):
+        if isinstance(value, int):
+            # Assume the integer is a timestamp
+            return datetime.datetime.fromtimestamp(value).date()
+        elif isinstance(value, str):
+            try:
+                # Attempt to parse the date string
+                return datetime.datetime.strptime(value, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValueError("Invalid date string format, expected YYYY-MM-DD")
+        else:
+            return None
+
     def JSON_serialize(self):
         return {
             "type": "date",
             "label": self.label,
-            "default_value": self.default_value
+            "default_value": self.default_value.isoformat() if self.default_value else None
         }
 class TimeComponent(Component):
     type = "time"
+    default_value = IntField(0, 1439)
+
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
+        super().__init__(**kwargs)
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', None)
+        self.default_value = self.validate_time(kwargs.get('default_value'))
+
+    @staticmethod
+    def validate_time(value):
+        if isinstance(value, int) and 0 <= value < 1440:
+            return value
+        else:
+            raise ValueError("Invalid time value, must be an integer representing minutes from 0 to 1439")
+
     def JSON_serialize(self):
         return {
             "type": "time",
@@ -107,15 +135,31 @@ class TimeComponent(Component):
 
 class DateTimeComponent(Component):
     type = "datetime"
+    default_value = DateTimeField()
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
+        super().__init__(**kwargs)
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', None)
+        self.default_value = self.validate_datetime(kwargs.get('default_value'))
+
+    @staticmethod
+    def validate_datetime(value):
+        if isinstance(value, int):
+            # Assume the integer is a timestamp
+            return datetime.datetime.fromtimestamp(value)
+        elif isinstance(value, str):
+            try:
+                # Attempt to parse the datetime string
+                return datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')
+            except ValueError:
+                raise ValueError("Invalid datetime string format, expected YYYY-MM-DDTHH:MM:SS")
+        else:
+            return None
+
     def JSON_serialize(self):
         return {
             "type": "datetime",
             "label": self.label,
-            "default_value": self.default_value
+            "default_value": self.default_value.isoformat() if self.default_value else None
         }
 
 AVAILABLE_COMPONENTS = ["text", "checkbox", "radio",

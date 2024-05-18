@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from "react";
+import React, { Ref, forwardRef, memo } from "react";
 import { FormComponentType, ComponentType, ComponentMode } from "@/misc/types";
 import TextEdit from "./textComponent/TextComponentEdit";
 import TextStatic from "./textComponent/TextComponentStatic";
@@ -6,6 +6,7 @@ import TextAnswer from "./textComponent/TextComponentAnswer";
 
 import NumberComponent from "./numberComponent/NumberComponent"; // Similar imports for Number and other components
 import CheckBoxComponent from "./checkBoxComponent/CheckBoxComponent";
+import { EditComponentHandleInterface } from "../formConstructor/FormConstructor";
 
 type FormComponentProps = {
   component: FormComponentType;
@@ -13,7 +14,7 @@ type FormComponentProps = {
 };
 
 const ComponentFactory = memo(
-  forwardRef<HTMLFormElement, any>(function ComponentFactory(
+  forwardRef<EditComponentHandleInterface<any>, any>(function ComponentFactory(
     { component, mode }: FormComponentProps,
     ref
   ) {

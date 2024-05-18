@@ -1,3 +1,4 @@
+import logging
 from .db.Form import Form
 from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
@@ -43,59 +44,64 @@ class FormController:
         name = request.args.get('name')
    
         page =  request.args.get('page')
-        
-        if not page: 
+
+        if not page or not int.is_integer(page) or page > 0: 
             page = 1
-        
         if not name:
             return {"status": "fail", "message": "query parameter 'name' is required"}, 400
         
         forms = Form.objects(name__icontains=name).skip((int(page) - 1) * RESULTS_PER_PAGE).limit(RESULTS_PER_PAGE)
         data = [form.to_json() for form in forms]
-        return {"status": "success", "length": len(data), "data": data}, 200
+        return {"status": "success", "length": len(data), "page": page, "data": data}, 200
     
     @staticmethod
     @error_wrapper
     def create_form(request):
-        body = request.json.get('form')
-        if body is None:
-            return {"status": "fail", "message": "form is required"}, 400
-        if body.get('name') is  None:
-            return {"status": "fail", "message": "name is required"}, 400
-        
-        if body.get('components') is None or len(body.get('components')) == 0:
-            return {"status": "fail", "message": "components are required"}, 400
+        try:
+            body = request.json.get('form')
+            if not body:
+                raise ValueError("form is required")
+            if not body.get('name'):
+                raise ValueError("name is required")
+            if not body.get('components') or not len(body.get('components')):
+                raise ValueError("components are required")
 
-        components = []
+            components = []
+            for component in body['components']:
+                if component['type'] not in AVAILABLE_COMPONENTS:
+                    raise ValueError(f"invalid component type: {component['type']}")
+                components.append(ComponentFactory.from_type(component['type'], **component))
         
-        for component in body['components']:
-            if component['type'] not in AVAILABLE_COMPONENTS:
-                return {"status": "fail", "message": f"invalid component type: {component['type']}"}, 400
-            components.append(ComponentFactory.from_type(component['type'], **component))
-        print(body.get('image'))
-        if body.get('image') is None:
-            body['image'] = 'placeholder.png'
-        else:
-            # image is a JSON blob so we need to extract it from the request
-            imagefile = request.files.get('image')
-            if imagefile:
-                # #slugify the filename
-                # imagefile.filename = slugify(imagefile.filename)
-                # #add timestamp to the filename
-                # imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
-                # imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
-                # body['image'] = imagefile.filename
-                pass
-            else:
+            if 'image' not in body:
                 body['image'] = 'placeholder.png'
+            else:
+                # image is a JSON blob so we need to extract it from the request
+                imagefile = request.files.get('image')
+                if imagefile:
+                    # #slugify the filename
+                    # imagefile.filename = slugify(imagefile.filename)
+                    # #add timestamp to the filename
+                    # imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
+                    # imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
+                    # body['image'] = imagefile.filename
+                    pass
+                else:
+                    body['image'] = 'placeholder.png'
+            # Additional checks and operations for image handling go here
 
-        if body.get('key') is not None:
-            body['key'] = Hasher.hash(body['key'])
+            if body.get('key'):
+                body['key'] = Hasher.hash(body['key'])
 
-        body['components'] = components
-        form = Form(**body)
-        Form.save(form)
-        return {"status": "success", "data": form.to_json()}, 201
+            body['components'] = components
+            form = Form(**body)
+            Form.save(form)
+            return {"status": "success", "data": form.to_json()}, 201
+        except ValueError as e:
+            return {"status": "fail", "message": str(e)}, 400
+        except Exception as e:
+            logging.error(f"Unexpected error: {str(e)}")
+            return {"status": "error", "message": "Internal server error"}, 500
+
     
     @staticmethod
     @error_wrapper
