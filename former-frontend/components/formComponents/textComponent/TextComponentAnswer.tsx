@@ -1,5 +1,5 @@
 import React from "react";
-import { TextComponent as ITextComponent } from "@/misc/types"; // Adjust the import path as necessary
+import { TextComponent as ITextComponent } from "@/misc/types"; 
 import styles from "../FormComponent.module.css";
 
 const TextComponentAnswer: React.FC<ITextComponent> = ({ label }) => {

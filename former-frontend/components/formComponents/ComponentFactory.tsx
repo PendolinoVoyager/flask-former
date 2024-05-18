@@ -4,8 +4,7 @@ import TextEdit from "./textComponent/TextComponentEdit";
 import TextStatic from "./textComponent/TextComponentStatic";
 import TextAnswer from "./textComponent/TextComponentAnswer";
 
-import NumberComponent from "./numberComponent/NumberComponent"; // Similar imports for Number and other components
-import CheckBoxComponent from "./checkBoxComponent/CheckBoxComponent";
+import NumberEdit from "./numberComponent/NumberComponentEdit";
 import { EditComponentHandleInterface } from "../formConstructor/FormConstructor";
 
 type FormComponentProps = {
@@ -23,8 +22,8 @@ const ComponentFactory = memo(
         switch (component.type) {
           case ComponentType.Text:
             return <TextEdit ref={ref} {...component} />;
-          // case ComponentType.Number:
-          //   return <NumberEdit ref={ref} {...component} />;
+          case ComponentType.Number:
+            return <NumberEdit ref={ref} {...component} />;
           // case ComponentType.CheckBox:
           //   return <CheckBoxEdit ref={ref} {...component} />;
           default:

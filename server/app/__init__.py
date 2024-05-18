@@ -12,7 +12,7 @@ def create_app():
     app.static_folder = os.getenv("STATIC_DIR")
 
     # Set up CORS
-    CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/v1/*": {"origins": os.getenv("WEBSITE_HOST")}})
     CORS(app, resources={r"/images/*": {"origins": os.getenv("WEBSITE_HOST")}})
 
     # Database connection
