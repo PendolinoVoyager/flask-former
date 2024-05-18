@@ -33,3 +33,29 @@
   transform: translateY(-3px);
   background-color: var(--color-info);
 }
+.submitBtn {
+  border: none;
+  padding: 0.5rem;
+  background-color: var(--color-info);
+  min-width: 10rem;
+  color: whitesmoke;
+  font-weight: 600;
+  font-size: 1rem;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  margin: 1rem auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  box-shadow: var(--shadow);
+}
+.submitBtn:hover {
+  transform: translateY(-3px);
+}
+.submitBtn:disabled {
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+.submitBtn:disabled:hover {
+  transform: none;
+}

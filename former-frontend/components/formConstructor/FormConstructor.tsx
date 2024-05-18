@@ -12,8 +12,13 @@ import {
   DispatchActions,
   FormConstructorContext,
   FormConstructorProvider,
+  Step,
 } from "@/stores/formConstructorContext";
 import FormConstructorHeader from "./FormConstructorHeader";
+import FormConstructorBase from "./FormConstructorBase";
+import FormConstructorFinish from "./FormConstructorFinish";
+import Spinner from "../UI/Spinner";
+import { notFound, redirect } from "next/navigation";
 export default function FormConstructor() {
   return (
     <FormConstructorProvider>
@@ -21,50 +26,24 @@ export default function FormConstructor() {
     </FormConstructorProvider>
   );
 }
-export interface EditComponentHandleInterface<T> {
-  validateComponent: () => void;
-  isValid: () => boolean;
-  getFormData: () => T;
-}
 function FormConstructorInternal() {
   const {
-    state: { components },
-    dispatch,
+    state: { step },
   } = useContext(FormConstructorContext);
 
-  // Function to handle adding a new component
-  const addComponent = (componentType: ComponentType) => {
-    const newComponent = createFormComponent(componentType);
-    dispatch({
-      type: DispatchActions.ADD_COMPONENT,
-      payload: { id: components.length, component: newComponent },
-    });
-  };
-  const handleSubmit = function () {
-    components.forEach(({ ref }) => {
-      if (ref.current == null) return;
-      ref.current.validateComponent();
-      console.log(ref.current.isValid());
-      console.log(ref.current.getFormData());
-    });
-  };
-  return (
-    <>
-      <FormConstructorHeader onAddComponent={addComponent} />
-
-      <DndContext>
-        <div className={classes.constructorCore}>
-          {components.map(({ id, component, ref }) => (
-            <ComponentFactory
-              key={id}
-              component={component}
-              mode={ComponentMode.edit}
-              ref={ref}
-            />
-          ))}
-        </div>
-      </DndContext>
-      <button onClick={handleSubmit}>Submit</button>
-    </>
-  );
+  switch (step) {
+    case Step.components:
+      return <FormConstructorBase />;
+    case Step.details:
+      return <FormConstructorFinish />;
+    case Step.submitting:
+      return (
+        <>
+          <h1>Your form is being created...</h1>
+          <Spinner className="center" />
+        </>
+      );
+    default:
+      notFound();
+  }
 }

@@ -6,7 +6,7 @@ import {
 import styles from "../FormComponent.module.css";
 import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructor";
+import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 
 const TextComponentEdit = forwardRef(function TextComponentEdit(
   { label, defaultValue }: ITextComponent,
@@ -41,13 +41,15 @@ const TextComponentEdit = forwardRef(function TextComponentEdit(
       },
     })
   );
-
   return (
     <form
       ref={ref as Ref<HTMLFormElement>}
       onSubmit={handleSubmit(() => {})}
       className={`${styles.component} ${styles.editing}`}
     >
+      <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
+        Text field
+      </h2>
       <input type="hidden" {...register("type")} />
       <div
         className={`${styles.label} ${errors.label ? styles.errorField : ""}`}

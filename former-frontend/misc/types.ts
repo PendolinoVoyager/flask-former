@@ -76,7 +76,13 @@ export function createFormComponent(
         defaultValue: 0,
         choices: ["Option 1", "Option 2"],
       };
-    // Add other cases as necessary
+    case ComponentType.Radio:
+      return {
+        type: ComponentType.Radio,
+        label: "New Radio",
+        defaultValue: 0,
+        choices: ["Option 1", "Option 2"],
+      };
     default:
       throw new Error(`Unsupported component type: ${componentType}`);
   }

@@ -1,17 +1,11 @@
-import {
-  ForwardedRef,
-  Ref,
-  forwardRef,
-  memo,
-  useImperativeHandle,
-} from "react";
-import { CheckboxComponent, ComponentType } from "@/misc/types";
-import styles from "../FormComponent.module.css";
+import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
+import { ComponentType, RadioComponent } from "@/misc/types";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
-  { label, defaultValue, choices }: CheckboxComponent,
-  ref: ForwardedRef<EditComponentHandleInterface<ComponentType.CheckBox>>
+import styles from "../FormComponent.module.css";
+const RadioEdit = forwardRef(function RadioEdit(
+  { defaultValue, label, choices }: RadioComponent,
+  ref: ForwardedRef<EditComponentHandleInterface<ComponentType.Radio>>
 ) {
   const {
     handleSubmit,
@@ -24,7 +18,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
       label,
       defaultValue,
       choices,
-      type: ComponentType.CheckBox,
+      type: ComponentType.Radio,
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -38,7 +32,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
     append("");
   };
 
-  useImperativeHandle<any, EditComponentHandleInterface<CheckboxComponent>>(
+  useImperativeHandle<any, EditComponentHandleInterface<RadioComponent>>(
     ref,
     () => ({
       validateComponent: () => {
@@ -48,7 +42,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
         return isValid;
       },
       getFormData: () => {
-        return getValues() as CheckboxComponent;
+        return getValues() as RadioComponent;
       },
     })
   );
@@ -59,7 +53,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
       ref={ref as Ref<HTMLFormElement>}
     >
       <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
-        Checkbox (multiple choice) field
+        Radio (single choice) field
       </h2>
 
       <input type="hidden" {...register("type")} />
@@ -80,26 +74,19 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
           )}
         />
       </div>
-      <div className={styles.checkboxGroup}>
+      <div className={styles.cherackboxGroup}>
         {fields.map((item, index) => (
           <div key={item.id} className={styles.optionControls}>
             <Controller
               name={`choices.${index}`}
               control={control}
-              rules={{ required: "Empty options aren't allowed." }}
               render={({ field }) => (
                 <>
                   <input
                     className={styles.input}
                     {...field}
                     type="text"
-                    placeholder={
-                      //@ts-ignore
-                      errors.choices?.at(index)
-                        ? //@ts-ignore
-                          errors.choices.at(index).message
-                        : `Option ${index + 1}`
-                    }
+                    placeholder={`Option ${index + 1}`}
                   />
                   <button
                     type="button"
@@ -124,5 +111,4 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
     </form>
   );
 });
-
-export default CheckBoxComponentEdit;
+export default RadioEdit;
