@@ -1,5 +1,5 @@
 "use client";
-import { fetchForms } from "@/misc/http";
+import { fetchForms } from "@/misc/actions";
 import FormList from "./FormList";
 import { useCallback, useEffect, useState } from "react";
 import Spinner from "../UI/Spinner";

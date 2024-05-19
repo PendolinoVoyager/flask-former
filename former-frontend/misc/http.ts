@@ -1,6 +1,8 @@
-import type { Form } from "@/misc/types";
+import { FormComponentType } from "./types";
+
 export const BASE_URL = "http://localhost:8080/api/v1";
 export const IMAGE_URL = "http://localhost:8080/images";
+export const FILE_SIZE_LIMIT = 2097152; //around 2MB
 export const DEF_TIMEOUT = 15_000;
 export async function setTimeoutRequest(
   promise: Promise<any>,
@@ -9,29 +11,27 @@ export async function setTimeoutRequest(
   const t = new Promise((res, rej) => setTimeout(rej, ms));
   return Promise.race([t, promise]);
 }
-export async function fetchForms(query?: string): Promise<Form[]> {
-  let res: Response;
-  if (!query) res = await setTimeoutRequest(fetch(`${BASE_URL}/forms`));
-  else
-    res = await setTimeoutRequest(
-      fetch(`${BASE_URL}/forms/search?name=${query}`)
-    );
+export async function fileToBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
 
-  if (!res.ok) throw new Error("The server didn't respond. Please try again.");
+    reader.onload = function () {
+      resolve(reader.result);
+    };
 
-  const json = await res.json();
-  if (json.status === "fail") throw new Error("Something went wrong.");
+    reader.onerror = function (error) {
+      reject(error);
+    };
 
-  return json.data;
+    reader.readAsDataURL(file);
+  });
 }
-export async function fetchForm(id: string): Promise<Form | Error> {
-  try {
-    const res = await setTimeoutRequest(fetch(`${BASE_URL}/forms/${id}`));
-    if (!res.ok) throw new Error("Failed to fetch form.");
-    const json = await res.json();
-    if (json.status === "fail") throw new Error(json.message);
-    return json.data as Form;
-  } catch (err) {
-    return err as Error;
-  }
+
+export function cleanData(obj: Object) {
+  Object.entries(obj).forEach(([key, val]) => {
+    if (!val) {
+      //@ts-ignore
+      delete obj[key];
+    }
+  });
 }

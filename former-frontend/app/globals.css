@@ -75,7 +75,53 @@ main {
   justify-content: center;
   align-items: center;
 }
+.wide {
+  width: 100%;
+}
+.tall {
+  height: 50vh;
+}
 h1 {
   color: var(--color-primary);
   font-size: 3rem;
+}
+.fileInput {
+  border: none;
+  box-shadow: var(--shadow);
+}
+.fileInfo {
+  color: var(--color-info);
+  text-align: center;
+}
+.squareBtn {
+  border: none;
+  padding: 0.5rem;
+  background-color: var(--color-info);
+  min-width: 10rem;
+  color: whitesmoke;
+  font-weight: 600;
+  font-size: 1rem;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  margin: 1rem auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  box-shadow: var(--shadow);
+}
+.squareBtn:hover {
+  transform: translateY(-3px);
+}
+.squareBtn:disabled {
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+.squareBtn:disabled:hover {
+  transform: none;
+}
+.errorBorder {
+  border: 2px solid var(--color-danger);
+}
+.errorText {
+  color: var(--color-danger);
 }

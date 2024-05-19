@@ -10,7 +10,7 @@ import styles from "../FormComponent.module.css";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
-  { label, defaultValue, choices }: CheckboxComponent,
+  { label, choices }: CheckboxComponent,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.CheckBox>>
 ) {
   const {
@@ -22,7 +22,6 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
   } = useForm({
     defaultValues: {
       label,
-      defaultValue,
       choices,
       type: ComponentType.CheckBox,
     },

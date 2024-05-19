@@ -8,19 +8,18 @@ export type Form = {
 };
 
 export enum ComponentType {
-  Text = "Text",
-  Number = "Number",
-  Date = "Date",
-  Datetime = "Datetime",
-  Time = "Time",
-  CheckBox = "CheckBox",
-  Radio = "Radio",
+  Text = "text",
+  Number = "number",
+  Date = "date",
+  Datetime = "datetime",
+  Time = "time",
+  CheckBox = "checkbox",
+  Radio = "radio",
 }
 
 export interface Component {
   type: ComponentType;
   label: string;
-  defaultValue?: unknown;
 }
 
 export interface TextComponent extends Component {
@@ -38,12 +37,10 @@ export interface NumberComponent extends Component {
 
 export interface CheckboxComponent extends Component {
   type: ComponentType.CheckBox;
-  defaultValue?: number;
   choices: string[];
 }
 export interface RadioComponent extends Component {
   type: ComponentType.Radio;
-  defaultValue?: number;
   choices: string[];
 }
 export type FormComponentType =
@@ -73,14 +70,12 @@ export function createFormComponent(
       return {
         type: ComponentType.CheckBox,
         label: "New Checkbox",
-        defaultValue: 0,
         choices: ["Option 1", "Option 2"],
       };
     case ComponentType.Radio:
       return {
         type: ComponentType.Radio,
         label: "New Radio",
-        defaultValue: 0,
         choices: ["Option 1", "Option 2"],
       };
     default:

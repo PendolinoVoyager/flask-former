@@ -12,6 +12,7 @@ import {
   DispatchActions,
   FormConstructorContext,
 } from "@/stores/formConstructorContext";
+import SquareButton from "../UI/SquareButton";
 
 export interface EditComponentHandleInterface<T> {
   validateComponent: () => void;
@@ -44,7 +45,7 @@ export default function FormConstructorBase() {
     });
   };
   return (
-    <>
+    <div className={classes.page}>
       <FormConstructorHeader onAddComponent={addComponent} />
 
       <DndContext>
@@ -59,13 +60,13 @@ export default function FormConstructorBase() {
           ))}
         </div>
       </DndContext>
-      <button
+      <SquareButton
         onClick={handleSubmit}
         className={classes.submitBtn}
         disabled={components.length === 0}
       >
         Continue
-      </button>
-    </>
+      </SquareButton>
+    </div>
   );
 }
