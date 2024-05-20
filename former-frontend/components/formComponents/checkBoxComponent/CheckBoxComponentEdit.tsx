@@ -36,7 +36,6 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
   const handleAddOption = () => {
     append("");
   };
-
   useImperativeHandle<any, EditComponentHandleInterface<CheckboxComponent>>(
     ref,
     () => ({
@@ -44,7 +43,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
         handleSubmit(() => {})();
       },
       isValid: () => {
-        return isValid;
+        return isValid && getValues().choices.length !== 0;
       },
       getFormData: () => {
         return getValues() as CheckboxComponent;
@@ -57,7 +56,11 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
       className={`${styles.component} ${styles.editing}`}
       ref={ref as Ref<HTMLFormElement>}
     >
-      <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
+      <h2
+        className={
+          !isValid || !getValues().choices.length ? styles.errorColor : ""
+        }
+      >
         Checkbox (multiple choice) field
       </h2>
 

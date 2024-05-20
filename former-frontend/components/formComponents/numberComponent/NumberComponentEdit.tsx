@@ -23,8 +23,8 @@ const NumberEdit = memo(
       getValues,
     } = useForm({
       defaultValues: {
-        label: label,
-        defaultValue: defaultValue,
+        label,
+        defaultValue,
         min,
         max,
         isInteger,
@@ -33,6 +33,7 @@ const NumberEdit = memo(
       mode: "onSubmit",
       reValidateMode: "onChange",
     });
+
     useImperativeHandle<any, EditComponentHandleInterface<NumberComponent>>(
       ref,
       () => ({
@@ -75,52 +76,62 @@ const NumberEdit = memo(
         </div>
         <div>
           <span>Default Value</span>
-          <Controller
-            name="defaultValue"
-            control={control}
-            render={({ field }) => (
-              <input
-                className={styles.input}
-                {...field}
-                type="number"
-                placeholder="Edit default value"
-                step={isInteger ? 1 : ""}
-              />
-            )}
+
+          <input
+            className={`${styles.input} ${
+              errors.defaultValue ? styles.errorBorder : ""
+            }`}
+            {...register("defaultValue", {
+              //major bull: value is a string actually :)
+              //@ts-ignore
+              validate: (value: string, { min, max }) =>
+                value == "" ||
+                (!isNaN(parseFloat(value)) &&
+                  isFinite(+value) &&
+                  (min == null || +value >= min) &&
+                  (max == null || +value <= max)),
+            })}
+            type="number"
+            placeholder="Edit default value"
+            step={isInteger ? 1 : ""}
           />
         </div>
         <div>
           <span>Min</span>
-          <Controller
-            name="min"
-            control={control}
-            render={({ field }) => (
-              <input
-                className={styles.numberInput}
-                {...field}
-                type="number"
-                defaultValue={min}
-                placeholder="Edit min value"
-                step={isInteger ? 1 : "any"}
-              />
-            )}
+
+          <input
+            className={`${styles.numberInput} ${
+              errors.min ? styles.errorBorder : ""
+            }`}
+            {...register("min", {
+              validate: (value) =>
+                //@ts-ignore
+                value == "" ||
+                //@ts-ignore
+                (!isNaN(parseFloat(value)) && isFinite(value)),
+            })}
+            type="number"
+            defaultValue={min}
+            placeholder="Edit min value"
+            step={isInteger ? 1 : "any"}
           />
         </div>
         <div>
           <span>Max</span>
-          <Controller
-            name="max"
-            control={control}
-            render={({ field }) => (
-              <input
-                className={styles.numberInput}
-                {...field}
-                type="number"
-                defaultValue={min}
-                placeholder="Edit max value"
-                step={isInteger ? 1 : "any"}
-              />
-            )}
+
+          <input
+            className={`${styles.numberInput} ${
+              errors.max ? styles.errorBorder : ""
+            }`}
+            {...register("max", {
+              validate: (value) =>
+                //@ts-ignore
+                value == "" || (!isNaN(parseFloat(+value)) && isFinite(value)),
+            })}
+            type="number"
+            defaultValue={max}
+            placeholder="Edit max value"
+            step={isInteger ? 1 : "any"}
           />
         </div>
         <div className={styles.label}>

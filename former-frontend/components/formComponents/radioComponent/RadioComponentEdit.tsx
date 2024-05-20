@@ -4,7 +4,7 @@ import { EditComponentHandleInterface } from "@/components/formConstructor/FormC
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import styles from "../FormComponent.module.css";
 const RadioEdit = forwardRef(function RadioEdit(
-  { defaultValue, label, choices }: RadioComponent,
+  { label, choices }: RadioComponent,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.Radio>>
 ) {
   const {
@@ -16,7 +16,6 @@ const RadioEdit = forwardRef(function RadioEdit(
   } = useForm({
     defaultValues: {
       label,
-      defaultValue,
       choices,
       type: ComponentType.Radio,
     },
@@ -39,7 +38,7 @@ const RadioEdit = forwardRef(function RadioEdit(
         handleSubmit(() => {})();
       },
       isValid: () => {
-        return isValid;
+        return isValid && getValues().choices.length !== 0;
       },
       getFormData: () => {
         return getValues() as RadioComponent;
@@ -52,7 +51,11 @@ const RadioEdit = forwardRef(function RadioEdit(
       className={`${styles.component} ${styles.editing}`}
       ref={ref as Ref<HTMLFormElement>}
     >
-      <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
+      <h2
+        className={
+          !isValid || !getValues().choices.length ? styles.errorColor : ""
+        }
+      >
         Radio (single choice) field
       </h2>
 
@@ -74,19 +77,26 @@ const RadioEdit = forwardRef(function RadioEdit(
           )}
         />
       </div>
-      <div className={styles.cherackboxGroup}>
+      <div className={styles.checkboxGroup}>
         {fields.map((item, index) => (
           <div key={item.id} className={styles.optionControls}>
             <Controller
               name={`choices.${index}`}
               control={control}
+              rules={{ required: "Empty options aren't allowed." }}
               render={({ field }) => (
                 <>
                   <input
                     className={styles.input}
                     {...field}
                     type="text"
-                    placeholder={`Option ${index + 1}`}
+                    placeholder={
+                      //@ts-ignore
+                      errors.choices?.at(index)
+                        ? //@ts-ignore
+                          errors.choices.at(index).message
+                        : `Option ${index + 1}`
+                    }
                   />
                   <button
                     type="button"

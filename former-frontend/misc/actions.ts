@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { setTimeoutRequest, BASE_URL, cleanData } from "./http";
 import { Form, FormComponentType } from "./types";
 import { AvailablePaths, PATH, constructPath } from "@/app/paths";
+import { revalidatePath } from "next/cache";
 
 export async function fetchForms(query?: string): Promise<Form[]> {
   let res: Response;
@@ -50,5 +51,6 @@ export async function submitForm(
   });
   if (!res.ok) throw new Error("Ooops! Couldn't create the form...");
   const json = await res.json();
+  revalidatePath(constructPath(AvailablePaths.ALL_FORMS));
   redirect(constructPath(AvailablePaths.FORM, json.data.id));
 }

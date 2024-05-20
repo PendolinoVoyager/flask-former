@@ -43,7 +43,11 @@ type Action =
     }
   | {
       type: DispatchActions.REORDER;
-      payload: { id: number; target_index: number };
+      payload: {
+        id: number;
+        component: FormComponentType;
+        ref: RefObject<EditComponentHandleInterface<unknown>>;
+      }[];
     }
   | {
       type: DispatchActions.PROCEED | DispatchActions.BACK;
@@ -91,19 +95,9 @@ const formReducer = (state: FormState, action: Action): FormState => {
         ),
       };
     case DispatchActions.REORDER:
-      const cmp = state.components.find((c) => c.id === action.payload.id);
-      if (!cmp) return state;
-      const componentsFiltered = state.components.filter((c) => c !== cmp);
       return {
         ...state,
-        components: [
-          ...componentsFiltered.slice(0, action.payload.target_index),
-          cmp,
-          ...componentsFiltered.slice(
-            action.payload.target_index + 1,
-            componentsFiltered.length
-          ),
-        ],
+        components: action.payload,
       };
     case DispatchActions.SAVE_DETAILS:
       const {
