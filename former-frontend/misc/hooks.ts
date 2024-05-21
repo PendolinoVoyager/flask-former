@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ComponentType, ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
 
 export function useAsyncLoad<T>(
   fn: () => Promise<T>,
@@ -24,7 +24,7 @@ export function useAsyncLoad<T>(
   return { data, isLoading, error };
 }
 
-const useConfirmationModal = (initialMessage = "Are you sure?") => {
+export const useConfirmationModal = (initialMessage = "Are you sure?") => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState(initialMessage);
   const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => {});
@@ -51,4 +51,23 @@ const useConfirmationModal = (initialMessage = "Are you sure?") => {
   };
 };
 
-export default useConfirmationModal;
+
+import { useForm, UseFormGetValues, UseFormHandleSubmit } from "react-hook-form";
+import type { FormComponentType } from "./types";
+import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
+
+
+interface UseExposeHandleOptions<T extends FormComponentType> {
+  getValues: UseFormGetValues<T>,
+  isValid: boolean,
+  handleSubmit: UseFormHandleSubmit<T>;
+}
+export function useExposeHandle<T>(ref: ForwardedRef<EditComponentHandleInterface<T>>, 
+  { getValues, isValid, handleSubmit }: UseExposeHandleOptions<any>) {
+  //@ts-ignore
+  useImperativeHandle(ref, () => ({
+    validateComponent: () => handleSubmit(() => {})(),
+    isValid: () => isValid,
+    getFormData: () => getValues(),
+  }));
+}

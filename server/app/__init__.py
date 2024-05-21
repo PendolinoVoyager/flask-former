@@ -11,6 +11,7 @@ def create_app():
     app.config["SECRET"] = os.getenv("SECRET")
     app.config["ENV"] = os.getenv("ENV")
     app.static_folder = os.getenv("STATIC_DIR")
+    logging.basicConfig(filename=os.getenv("LOG_FILE"))
 
     # Set up CORS
     CORS(app, resources={r"/api/v1/*": {"origins": os.getenv("WEBSITE_HOST")}})
@@ -20,7 +21,6 @@ def create_app():
     if db_connect(os.getenv('DB_URI')) is None:
         print("Cannot connect to database, exiting...")
         exit(1)
-
     # Register blueprints
     app.register_blueprint(v1_router_forms)
     app.register_blueprint(v1_router_answers)

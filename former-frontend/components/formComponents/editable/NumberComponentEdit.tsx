@@ -134,7 +134,7 @@ const NumberEdit = memo(
             step={isInteger ? 1 : "any"}
           />
         </div>
-        <div className={styles.label}>
+        <div className={`${styles.label} ${styles.optionControls}`}>
           <span>Integer only</span>
           <input
             className=""

@@ -2,13 +2,13 @@ import {
   ForwardedRef,
   Ref,
   forwardRef,
-  memo,
   useImperativeHandle,
 } from "react";
 import { CheckboxComponent, ComponentType } from "@/misc/types";
 import styles from "../FormComponent.module.css";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useExposeHandle } from "@/misc/hooks";
 const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
   { label, choices }: CheckboxComponent,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.CheckBox>>
@@ -36,21 +36,6 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
   const handleAddOption = () => {
     append("");
   };
-  useImperativeHandle<any, EditComponentHandleInterface<CheckboxComponent>>(
-    ref,
-    () => ({
-      validateComponent: () => {
-        handleSubmit(() => {})();
-      },
-      isValid: () => {
-        return isValid && getValues().choices.length !== 0;
-      },
-      getFormData: () => {
-        return getValues() as CheckboxComponent;
-      },
-    })
-  );
-
   return (
     <form
       className={`${styles.component} ${styles.editing}`}

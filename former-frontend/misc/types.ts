@@ -4,7 +4,7 @@ export type Form = {
   description: string;
   image: string;
   created: EpochTimeStamp;
-  components: any[];
+  components: FormComponentType[];
 };
 
 export enum ComponentType {

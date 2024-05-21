@@ -7,7 +7,7 @@ import {
 } from "@/stores/formConstructorContext";
 import FileSelector from "../UI/FileSelector";
 import SquareButton from "../UI/SquareButton";
-import useConfirmationModal from "@/misc/hooks";
+import {useConfirmationModal} from "@/misc/hooks";
 import ConfirmationModal from "../UI/ConfirmationModal";
 
 const FormConstructorFinish = () => {

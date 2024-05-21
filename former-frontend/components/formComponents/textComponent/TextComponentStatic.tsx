@@ -1,8 +1,8 @@
 import React from "react";
-import { TextComponent as ITextComponent } from "@/misc/types";
+import { TextComponent  } from "@/misc/types";
 import styles from "../FormComponent.module.css";
 
-const TextComponentStatic: React.FC<ITextComponent> = ({
+const TextComponentStatic: React.FC<TextComponent> = ({
   label,
   defaultValue,
 }) => {

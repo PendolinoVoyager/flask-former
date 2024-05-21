@@ -1,3 +1,4 @@
+import os
 def error_wrapper(action):
     def wrapper(*args, **kwargs):
         try:

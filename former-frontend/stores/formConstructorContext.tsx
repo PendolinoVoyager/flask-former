@@ -1,5 +1,5 @@
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
-import { ComponentType, FormComponentType } from "@/misc/types";
+import {  FormComponentType } from "@/misc/types";
 import React, { createContext, useReducer, ReactNode, RefObject } from "react";
 //It needs to be FormComponentType, even when empty.
 //When editing the form comes in place it saves a lot of time.

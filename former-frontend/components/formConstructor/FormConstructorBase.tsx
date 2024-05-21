@@ -28,6 +28,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
+import EditComponentFactory from "../formComponents/EditComponentFactory";
 export interface EditComponentHandleInterface<T> {
   validateComponent: () => void;
   isValid: () => boolean;
@@ -105,9 +106,8 @@ export default function FormConstructorBase() {
           <div className={classes.constructorCore}>
             {components.map(({ id, component, ref }) => (
               <SortableItem key={id} id={id}>
-                <ComponentFactory
+                <EditComponentFactory
                   component={component}
-                  mode={ComponentMode.edit}
                   ref={ref}
                 />
               </SortableItem>
