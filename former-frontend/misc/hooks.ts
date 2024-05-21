@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export function useAsyncLoad<T>(
   fn: () => Promise<T>,
-  ...deps: any[]
+  deps: any[]
 ): { data: T | null; isLoading: boolean; error?: Error } {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
@@ -23,3 +23,32 @@ export function useAsyncLoad<T>(
   }, [fn, ...deps]);
   return { data, isLoading, error };
 }
+
+const useConfirmationModal = (initialMessage = "Are you sure?") => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState(initialMessage);
+  const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => {});
+
+  const openModal = (newMessage: string, onConfirm: () => void) => {
+    setMessage(newMessage || initialMessage);
+    setOnConfirmCallback(() => () => {
+      onConfirm();
+      closeModal();
+    });
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  return {
+    isOpen,
+    message,
+    onConfirm: onConfirmCallback,
+    openModal,
+    closeModal,
+  };
+};
+
+export default useConfirmationModal;

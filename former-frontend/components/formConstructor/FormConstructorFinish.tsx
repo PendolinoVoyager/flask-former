@@ -7,6 +7,8 @@ import {
 } from "@/stores/formConstructorContext";
 import FileSelector from "../UI/FileSelector";
 import SquareButton from "../UI/SquareButton";
+import useConfirmationModal from "@/misc/hooks";
+import ConfirmationModal from "../UI/ConfirmationModal";
 
 const FormConstructorFinish = () => {
   const { state, dispatch } = useContext(FormConstructorContext);
@@ -26,17 +28,28 @@ const FormConstructorFinish = () => {
     },
   });
 
+  const { isOpen, message, onConfirm, openModal, closeModal } =
+    useConfirmationModal("Are you sure you want to proceed?");
+
   const onSubmit = (data: any) => {
-    data = { ...data, image: uploadedFile.current };
-    dispatch({
-      type: DispatchActions.SAVE_DETAILS,
-      payload: data,
+    openModal("Do you want to proceed with this form?", () => {
+      data = { ...data, image: uploadedFile.current };
+      dispatch({
+        type: DispatchActions.SAVE_DETAILS,
+        payload: data,
+      });
+      dispatch({ type: DispatchActions.PROCEED });
     });
-    dispatch({ type: DispatchActions.PROCEED });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.page}>
+      <ConfirmationModal
+        isOpen={isOpen}
+        onConfirm={onConfirm}
+        onCancel={closeModal}
+        message={message}
+      />
       <h2>Almost done!</h2>
       <p>
         Please finish with giving your form a name, description and a (optional)
@@ -57,6 +70,7 @@ const FormConstructorFinish = () => {
 
       <FileSelector
         className={classes.submitBtn}
+        accept="image/*"
         onFileSelect={(files) =>
           (uploadedFile.current = files ? files[0] : undefined)
         }

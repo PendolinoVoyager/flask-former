@@ -7,12 +7,14 @@ import { revalidatePath } from "next/cache";
 
 export async function fetchForms(query?: string): Promise<Form[]> {
   let res: Response;
-  if (!query) res = await setTimeoutRequest(fetch(`${BASE_URL}/forms`));
+  if (!query)
+    res = await setTimeoutRequest(
+      fetch(`${BASE_URL}/forms`, { method: "GET" })
+    );
   else
     res = await setTimeoutRequest(
       fetch(`${BASE_URL}/forms/search?name=${query}`)
     );
-
   if (!res.ok) throw new Error("The server didn't respond. Please try again.");
 
   const json = await res.json();

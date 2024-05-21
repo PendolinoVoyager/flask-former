@@ -125,3 +125,43 @@ h1 {
 .errorText {
   color: var(--color-danger);
 }
+
+/* MODAl */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--color-background);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+}
+
+.modal-content {
+  margin-bottom: 20px;
+}
+.modal-content p {
+  text-align: center;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

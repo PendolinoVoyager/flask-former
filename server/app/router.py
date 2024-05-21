@@ -3,13 +3,13 @@ from flask import Blueprint, jsonify, request
 from app.db.Answer import AnswerValidator, FormAnswer
 from app.db.Form import Form
 from .formController import FormController
+from .answerController import AnswerController
 from mongoengine import DoesNotExist
 
 v1_router_forms = Blueprint('user', __name__, url_prefix='/api/v1/forms')
 #This file contains route definitions for /api/v1. Route actions in FormController
 
 # Retrieve all forms
-
 @v1_router_forms.route('/', methods=['GET'])
 def get_all_forms():
     res, status = FormController.get_all_forms(request)
@@ -46,22 +46,6 @@ v1_router_answers = Blueprint('/api/v1/answers', __name__, url_prefix='/api/v1/a
 
 @v1_router_answers.route('/<form_id>/answer', methods=['POST'])
 def submit_answer(form_id):
-    try:
-        form = Form.objects.get(id=form_id)
-    except DoesNotExist:
-        return jsonify({'error': 'Form not found'}), 404
-
-    # Parse the JSON body of the request
-    answer_data = request.json.get('answers', [])
-    if not answer_data:
-        return jsonify({'error': 'No answers provided'}), 400
-    try:
-        validator = AnswerValidator(form, answer_data)
-        if validator.is_valid():
-            form_answer = FormAnswer(form=form_id, answers=answer_data)
-            FormAnswer.save(form_answer)
-        return jsonify(form_answer.to_json()), 201
-    except Exception as e:
-        print(e)
-        return jsonify({'status': 'fail', 'message': str(e)}), 400
+    res, status = AnswerController.answerForm(request, form_id)
+    return jsonify(res), status
 

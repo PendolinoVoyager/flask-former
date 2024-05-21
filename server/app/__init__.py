@@ -4,6 +4,7 @@ from .router import v1_router_forms, v1_router_answers
 from .db.db_init import connect as db_connect
 from http.client import HTTPException
 import os
+import logging
 
 def create_app():
     app = Flask(__name__)
@@ -16,7 +17,9 @@ def create_app():
     CORS(app, resources={r"/images/*": {"origins": os.getenv("WEBSITE_HOST")}})
 
     # Database connection
-    db_connect(os.getenv('DB_URI'))
+    if db_connect(os.getenv('DB_URI')) is None:
+        print("Cannot connect to database, exiting...")
+        exit(1)
 
     # Register blueprints
     app.register_blueprint(v1_router_forms)
@@ -35,8 +38,7 @@ def create_app():
         if app.config['ENV'] == 'development':
             print(e)
         else:
-            #TODO: log error
-            pass
+           logging.critical(e)
         if isinstance(e, HTTPException):
             return jsonify({"status": "fail", "message": str(e)}), e.code
         return jsonify({"status": "fail", "message": "Internal server error"}), 500

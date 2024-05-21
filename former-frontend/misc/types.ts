@@ -11,7 +11,7 @@ export enum ComponentType {
   Text = "text",
   Number = "number",
   Date = "date",
-  Datetime = "datetime",
+  DateTime = "datetime",
   Time = "time",
   CheckBox = "checkbox",
   Radio = "radio",
@@ -43,11 +43,16 @@ export interface RadioComponent extends Component {
   type: ComponentType.Radio;
   choices: string[];
 }
+export interface DateTimeComponent extends Component {
+  type: ComponentType.DateTime;
+  defaultValue?: string;
+}
 export type FormComponentType =
   | TextComponent
   | NumberComponent
   | CheckboxComponent
-  | RadioComponent;
+  | RadioComponent
+  | DateTimeComponent;
 
 export function createFormComponent(
   componentType: ComponentType
@@ -77,6 +82,11 @@ export function createFormComponent(
         type: ComponentType.Radio,
         label: "New Radio",
         choices: ["Option 1", "Option 2"],
+      };
+    case ComponentType.DateTime:
+      return {
+        type: ComponentType.DateTime,
+        label: "New DateTime",
       };
     default:
       throw new Error(`Unsupported component type: ${componentType}`);

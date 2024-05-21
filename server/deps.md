@@ -2,6 +2,7 @@ dotenv
 flask
 Flask-Testing
 pytest-flask
+mongomock
 mongoengine
 bcrypt
 flask-cors

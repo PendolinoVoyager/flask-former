@@ -3,19 +3,9 @@ from .db.Form import Form
 from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
 from globals import G_CONFIG
+from .helpers import error_wrapper
 RESULTS_PER_PAGE = G_CONFIG['RESULTS_PER_PAGE']
 import os
-
-
-def error_wrapper(action):
-    def wrapper(*args, **kwargs):
-        try:
-            return action(*args, **kwargs)
-        except Exception as e:
-            if os.getenv('ENV') == 'development':  
-                print(e)
-            return {'status': "fail", "message": str(e)}, 400
-    return wrapper
 
 class FormController:
     
@@ -76,7 +66,7 @@ class FormController:
                 body['image'] = 'placeholder.png'
             else:
                 # image is a JSON blob so we need to extract it from the request
-                imagefile = request.files.get('image')
+                # imagefile = request.json.get
                 if imagefile:
                     # #slugify the filename
                     # imagefile.filename = slugify(imagefile.filename)

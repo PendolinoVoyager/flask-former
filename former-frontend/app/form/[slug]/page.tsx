@@ -14,7 +14,6 @@ type _LocalProps = {
 export default async function FormPage({ params }: _LocalProps) {
   const form = await fetchForm(params.slug);
 
-  console.log(form);
   if (form instanceof Error) {
     notFound();
   }

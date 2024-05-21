@@ -10,6 +10,7 @@ import NumberEdit from "./numberComponent/NumberComponentEdit";
 import CheckBoxEdit from "./checkBoxComponent/CheckBoxComponentEdit";
 
 import RadioEdit from "./radioComponent/RadioComponentEdit";
+import DateTimeEdit from "./DateTimeComponent/DateTimeComponentEdit";
 type FormComponentProps = {
   component: FormComponentType;
   mode: ComponentMode;
@@ -20,6 +21,9 @@ const ComponentFactory = memo(
     { component, mode }: FormComponentProps,
     ref
   ) {
+    //TODO: make this not suck
+    //On second thought, I'm too deep in
+    //How many components can there be?
     switch (mode) {
       case ComponentMode.edit:
         switch (component.type) {
@@ -31,6 +35,8 @@ const ComponentFactory = memo(
             return <CheckBoxEdit ref={ref} {...component} />;
           case ComponentType.Radio:
             return <RadioEdit ref={ref} {...component} />;
+          case ComponentType.DateTime:
+            return <DateTimeEdit ref={ref} {...component} />;
           default:
             return null;
         }

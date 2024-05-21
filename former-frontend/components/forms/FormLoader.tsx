@@ -10,13 +10,10 @@ interface FormLoaderProps {
 }
 export default function FormLoader({ query_str }: FormLoaderProps) {
   //TODO: Cache them results
-  let fetchFunction = useCallback(fetchForms.bind(null, query_str), [
+  let fetchFunction = useCallback(() => fetchForms(query_str), [query_str]);
+  const { error, isLoading, data } = useAsyncLoad<Form[]>(fetchFunction, [
     query_str,
   ]);
-  const { error, isLoading, data } = useAsyncLoad<Form[]>(
-    fetchFunction,
-    query_str
-  );
   if (error)
     return (
       <div className="error">
