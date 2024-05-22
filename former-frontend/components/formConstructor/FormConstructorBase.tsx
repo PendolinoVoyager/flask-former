@@ -59,7 +59,6 @@ export default function FormConstructorBase() {
       newComponents.push(ref.current.getFormData() as FormComponentType);
     });
 
-    console.log(newComponents);
     if (!componentsValid || newComponents.length === 0) return;
 
     dispatch({
@@ -71,7 +70,19 @@ export default function FormConstructorBase() {
     });
   };
   // dnd context related
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;

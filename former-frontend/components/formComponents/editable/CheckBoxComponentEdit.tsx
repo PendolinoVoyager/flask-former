@@ -1,9 +1,10 @@
-import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
+import { ForwardedRef, Ref, forwardRef } from "react";
 import { CheckboxComponent, ComponentType } from "@/misc/types";
 import styles from "../FormComponent.module.css";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useExposeHandle } from "@/misc/hooks";
+import { Controller, useFieldArray } from "react-hook-form";
+import { useEditableRHF } from "@/misc/hooks";
+import EditablePreamble from "../editableHelpers/EditablePreamble";
 interface _Props {
   component: CheckboxComponent;
 }
@@ -11,26 +12,14 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
   { component }: _Props,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.CheckBox>>
 ) {
-  const {
-    handleSubmit,
-    control,
-    register,
-    formState: { errors, isValid },
-    getValues,
-  } = useForm({
-    defaultValues: {
-      ...component,
-      choices: component.choices,
-    },
-    mode: "onSubmit",
-    reValidateMode: "onChange",
-  });
-  useExposeHandle(ref, { getValues, isValid, handleSubmit });
+  const formState = useEditableRHF(ref, component);
+  const { register, isValid, getValues, control, errors } = formState;
   const { fields, append, remove } = useFieldArray({
     control,
     //@ts-ignore
     name: "choices",
   });
+  console.log(fields);
   const handleAddOption = () => {
     append("");
   };
@@ -39,32 +28,9 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
       className={`${styles.component} ${styles.editing}`}
       ref={ref as Ref<HTMLFormElement>}
     >
-      <h2
-        className={
-          !isValid || !getValues().choices.length ? styles.errorColor : ""
-        }
-      >
-        Checkbox (multiple choice) field
-      </h2>
-
-      <input type="hidden" {...register("type")} />
-      <div className={styles.label}>
-        <span>Label</span>
-        <Controller
-          name="label"
-          control={control}
-          rules={{ required: "Label is required" }}
-          render={({ field }) => (
-            <input
-              className={styles.editField}
-              {...field}
-              type="text"
-              placeholder={errors.label ? errors.label.message : "Edit label"}
-              required
-            />
-          )}
-        />
-      </div>
+      <EditablePreamble component={component} formState={formState as any}>
+        CheckBox (multiple choice) component
+      </EditablePreamble>
       <div className={styles.checkboxGroup}>
         {fields.map((item, index) => (
           <div key={item.id} className={styles.optionControls}>
@@ -102,7 +68,7 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
       <button
         type="button"
         className={styles.optionButton}
-        onClick={handleAddOption}
+        onClick={() => handleAddOption}
       >
         Add Option
       </button>

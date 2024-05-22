@@ -2,7 +2,7 @@ import { NumberComponent } from "@/misc/types"; // Adjust the import path as nec
 import styles from "../FormComponent.module.css";
 import { ForwardedRef, Ref, forwardRef, memo } from "react";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
-import { UseEditableRHFReturn, useEditableRHF } from "@/misc/hooks";
+import { useEditableRHF } from "@/misc/hooks";
 import EditablePreamble from "../editableHelpers/EditablePreamble";
 interface _Props {
   component: NumberComponent;
