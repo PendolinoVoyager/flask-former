@@ -1,101 +1,28 @@
-import { ComponentType, NumberComponent } from "@/misc/types"; // Adjust the import path as necessary
+import { NumberComponent } from "@/misc/types"; // Adjust the import path as necessary
 import styles from "../FormComponent.module.css";
-import {
-  ForwardedRef,
-  Ref,
-  forwardRef,
-  memo,
-  useImperativeHandle,
-} from "react";
+import { ForwardedRef, Ref, forwardRef, memo } from "react";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
-import { Controller, useForm } from "react-hook-form";
-
+import { UseEditableRHFReturn, useEditableRHF } from "@/misc/hooks";
+import EditablePreamble from "../editableHelpers/EditablePreamble";
+interface _Props {
+  component: NumberComponent;
+}
 const NumberEdit = memo(
   forwardRef(function NumberEdit(
-    { label, defaultValue, min, max, isInteger }: NumberComponent,
+    { component }: _Props,
     ref: ForwardedRef<EditComponentHandleInterface<NumberComponent>>
   ) {
-    const {
-      handleSubmit,
-      control,
-      register,
-      formState: { errors, isValid },
-      getValues,
-    } = useForm({
-      defaultValues: {
-        label,
-        defaultValue,
-        min,
-        max,
-        isInteger,
-        type: ComponentType.Number,
-      },
-      mode: "onSubmit",
-      reValidateMode: "onChange",
-    });
-
-    useImperativeHandle<any, EditComponentHandleInterface<NumberComponent>>(
-      ref,
-      () => ({
-        validateComponent: () => {
-          handleSubmit(() => {})();
-        },
-        isValid: () => {
-          return isValid;
-        },
-        getFormData: () => {
-          return getValues() as NumberComponent;
-        },
-      })
-    );
+    const formState = useEditableRHF<NumberComponent>(ref, component);
+    const { register, errors } = formState;
     return (
       <form
         className={`${styles.component} ${styles.editing}`}
         ref={ref as Ref<HTMLFormElement>}
       >
-        <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
-          Numeric field
-        </h2>
-        <input type="hidden" {...register("type")} />
-        <div className={styles.label}>
-          <span>Label</span>
-          <Controller
-            name="label"
-            control={control}
-            rules={{ required: "Label is required" }}
-            render={({ field }) => (
-              <input
-                className={styles.editField}
-                {...field}
-                type="text"
-                placeholder={errors.label ? errors.label.message : "Edit label"}
-                required
-              />
-            )}
-          />
-        </div>
-        <div>
-          <span>Default Value</span>
+        <EditablePreamble formState={formState as any} component={component}>
+          Numeric component
+        </EditablePreamble>
 
-          <input
-            className={`${styles.input} ${
-              errors.defaultValue ? styles.errorBorder : ""
-            }`}
-            {...register("defaultValue", {
-              //major bull: value is a string actually :)
-              //@ts-ignore
-              validate: (value: string, { min, max }) =>
-                value == "" ||
-                (!isNaN(parseFloat(value)) &&
-                  isFinite(+value) &&
-                  (min == null || +value >= min) &&
-                  (max == null || +value <= max)),
-            })}
-            type="number"
-            placeholder="Edit default value"
-            step={isInteger ? 1 : ""}
-          />
-        </div>
         <div>
           <span>Min</span>
 
@@ -104,16 +31,16 @@ const NumberEdit = memo(
               errors.min ? styles.errorBorder : ""
             }`}
             {...register("min", {
-              validate: (value) =>
+              validate: (value: any) =>
                 //@ts-ignore
                 value == "" ||
                 //@ts-ignore
                 (!isNaN(parseFloat(value)) && isFinite(value)),
             })}
             type="number"
-            defaultValue={min}
+            defaultValue={component.min}
             placeholder="Edit min value"
-            step={isInteger ? 1 : "any"}
+            step={component.isInteger ? 1 : "any"}
           />
         </div>
         <div>
@@ -124,22 +51,22 @@ const NumberEdit = memo(
               errors.max ? styles.errorBorder : ""
             }`}
             {...register("max", {
-              validate: (value) =>
+              validate: (value: any) =>
                 //@ts-ignore
                 value == "" || (!isNaN(parseFloat(+value)) && isFinite(value)),
             })}
             type="number"
-            defaultValue={max}
+            defaultValue={component.max}
             placeholder="Edit max value"
-            step={isInteger ? 1 : "any"}
+            step={component.isInteger ? 1 : "any"}
           />
         </div>
+
         <div className={`${styles.label} ${styles.optionControls}`}>
           <span>Integer only</span>
           <input
-            className=""
             type="checkbox"
-            defaultChecked={isInteger}
+            defaultChecked={component.isInteger}
             {...register("isInteger")}
           />
         </div>

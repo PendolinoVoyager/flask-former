@@ -7,7 +7,7 @@ import {
 } from "@/stores/formConstructorContext";
 import FileSelector from "../UI/FileSelector";
 import SquareButton from "../UI/SquareButton";
-import {useConfirmationModal} from "@/misc/hooks";
+import { useConfirmationModal } from "@/misc/hooks";
 import ConfirmationModal from "../UI/ConfirmationModal";
 
 const FormConstructorFinish = () => {
@@ -27,7 +27,6 @@ const FormConstructorFinish = () => {
       image,
     },
   });
-
   const { isOpen, message, onConfirm, openModal, closeModal } =
     useConfirmationModal("Are you sure you want to proceed?");
 

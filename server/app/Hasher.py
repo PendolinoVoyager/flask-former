@@ -8,3 +8,10 @@ class Hasher():
     @staticmethod
     def verify(string, hashed):
         return bcrypt.checkpw(bytes(string, 'utf-8'), bytes(hashed, 'utf-8') if type(hashed) == str else hashed)
+t = match "Test":
+    case "Test":
+            12
+        case "12":
+            1
+        case default:
+        1

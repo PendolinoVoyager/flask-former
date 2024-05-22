@@ -1,13 +1,13 @@
-import { ComponentType, DateTimeComponent } from "@/misc/types"; // Adjust the import path as necessary
+import { ComponentType, TimeComponent } from "@/misc/types"; // Adjust the import path as necessary
 import styles from "../FormComponent.module.css";
-import { ForwardedRef, Ref, forwardRef } from "react";
+import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useForm } from "react-hook-form";
 import { useExposeHandle } from "@/misc/hooks";
 
-const DateTimeEdit = forwardRef(function DateTimeEdit(
-  { label, defaultValue }: DateTimeComponent,
-  ref: ForwardedRef<EditComponentHandleInterface<DateTimeComponent>>
+const TimeEdit = forwardRef(function TimeEdit(
+  { label, defaultValue }: TimeComponent,
+  ref: ForwardedRef<EditComponentHandleInterface<TimeComponent>>
 ) {
   const {
     handleSubmit,
@@ -19,7 +19,7 @@ const DateTimeEdit = forwardRef(function DateTimeEdit(
     defaultValues: {
       label,
       defaultValue,
-      type: ComponentType.DateTime,
+      type: ComponentType.Time,
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -33,7 +33,7 @@ const DateTimeEdit = forwardRef(function DateTimeEdit(
       ref={ref as Ref<HTMLFormElement>}
     >
       <h2 className={Object.keys(errors).length ? styles.errorColor : ""}>
-        Date and Time field
+        Time field
       </h2>
       <input type="hidden" {...register("type")} />
       <div className={styles.label}>
@@ -61,11 +61,11 @@ const DateTimeEdit = forwardRef(function DateTimeEdit(
             errors.defaultValue ? styles.errorBorder : ""
           }`}
           {...register("defaultValue")}
-          type="datetime-local"
+          type="time"
           placeholder="Edit default value"
         />
       </div>
     </form>
   );
 });
-export default DateTimeEdit;
+export default TimeEdit;

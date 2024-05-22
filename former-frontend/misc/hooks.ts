@@ -1,4 +1,4 @@
-import { ComponentType, ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
+import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
 
 export function useAsyncLoad<T>(
   fn: () => Promise<T>,
@@ -51,23 +51,59 @@ export const useConfirmationModal = (initialMessage = "Are you sure?") => {
   };
 };
 
-
-import { useForm, UseFormGetValues, UseFormHandleSubmit } from "react-hook-form";
-import type { FormComponentType } from "./types";
+import {
+  Control,
+  FieldErrors,
+  FieldValues,
+  useForm,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
+import { ComponentType, type FormComponentType } from "./types";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 
-
 interface UseExposeHandleOptions<T extends FormComponentType> {
-  getValues: UseFormGetValues<T>,
-  isValid: boolean,
+  getValues: UseFormGetValues<T>;
+  isValid: boolean;
   handleSubmit: UseFormHandleSubmit<T>;
 }
-export function useExposeHandle<T>(ref: ForwardedRef<EditComponentHandleInterface<T>>, 
-  { getValues, isValid, handleSubmit }: UseExposeHandleOptions<any>) {
-  //@ts-ignore
+export function useExposeHandle<T>(
+  ref: ForwardedRef<EditComponentHandleInterface<T>>,
+  { getValues, isValid, handleSubmit }: UseExposeHandleOptions<any>
+) {
   useImperativeHandle(ref, () => ({
     validateComponent: () => handleSubmit(() => {})(),
     isValid: () => isValid,
     getFormData: () => getValues(),
   }));
+}
+export interface UseEditableRHFReturn<T extends FieldValues> {
+  control: Control<T>;
+  isValid: boolean;
+  errors: FieldErrors;
+  getValues: () => T;
+  handleSubmit: () => void;
+  register: UseFormRegister<T>;
+}
+export function useEditableRHF<T extends FormComponentType>(
+  ref: any,
+  component: T
+) {
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { errors, isValid },
+    getValues,
+  } = useForm<T, any, any>({
+    //@ts-ignore
+    defaultValues: {
+      ...component,
+    },
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
+  useExposeHandle(ref, { getValues, isValid, handleSubmit });
+  return { control, isValid, errors, getValues, handleSubmit, register };
 }

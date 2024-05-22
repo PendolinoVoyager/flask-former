@@ -1,5 +1,5 @@
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
-import {  FormComponentType } from "@/misc/types";
+import { FormComponentType } from "@/misc/types";
 import React, { createContext, useReducer, ReactNode, RefObject } from "react";
 //It needs to be FormComponentType, even when empty.
 //When editing the form comes in place it saves a lot of time.
@@ -8,21 +8,23 @@ export enum Step {
   details,
   submitting,
 }
+export interface ComponentIDed {
+  id: number;
+  component: FormComponentType;
+  ref: RefObject<EditComponentHandleInterface<unknown>>;
+}
 type FormState = {
   step: Step;
   name: string;
   description?: string;
   key?: string;
   image?: File;
-  components: {
-    id: number;
-    component: FormComponentType;
-    ref: RefObject<EditComponentHandleInterface<unknown>>;
-  }[];
+  components: ComponentIDed[];
 };
 export enum DispatchActions {
   ADD_COMPONENT,
   REMOVE_COMPONENT,
+  UPDATE_COMPONENTS,
   REORDER,
   PROCEED,
   BACK,
@@ -43,11 +45,7 @@ type Action =
     }
   | {
       type: DispatchActions.REORDER;
-      payload: {
-        id: number;
-        component: FormComponentType;
-        ref: RefObject<EditComponentHandleInterface<unknown>>;
-      }[];
+      payload: ComponentIDed[];
     }
   | {
       type: DispatchActions.PROCEED | DispatchActions.BACK;
@@ -60,6 +58,10 @@ type Action =
         image: File;
         key: string;
       };
+    }
+  | {
+      type: DispatchActions.UPDATE_COMPONENTS;
+      payload: { components: FormComponentType[] };
     };
 
 export const FormConstructorContext = createContext<{
@@ -119,6 +121,14 @@ const formReducer = (state: FormState, action: Action): FormState => {
       return {
         ...state,
         step: state.step - 1,
+      };
+    case DispatchActions.UPDATE_COMPONENTS:
+      return {
+        ...state,
+        components: state.components.map((c, idx) => ({
+          ...c,
+          component: action.payload.components[idx],
+        })),
       };
     default:
       return state;

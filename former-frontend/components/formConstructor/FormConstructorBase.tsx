@@ -9,15 +9,15 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import FormConstructorHeader from "./FormConstructorHeader";
-import ComponentFactory from "../formComponents/ComponentFactory";
 import classes from "./FormConstructor.module.css";
 import {
-  ComponentMode,
   ComponentType,
+  FormComponentType,
   createFormComponent,
 } from "@/misc/types";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import {
+  ComponentIDed,
   DispatchActions,
   FormConstructorContext,
 } from "@/stores/formConstructorContext";
@@ -50,12 +50,22 @@ export default function FormConstructorBase() {
   } = useContext(FormConstructorContext);
   const handleSubmit = function () {
     let componentsValid = true;
-    components.forEach(({ ref }) => {
+    const newComponents: FormComponentType[] = [];
+
+    components.forEach(({ ref, id }) => {
       if (ref.current == null) return;
       ref.current.validateComponent();
       componentsValid &&= ref.current.isValid();
+      newComponents.push(ref.current.getFormData() as FormComponentType);
     });
-    if (!componentsValid || components.length === 0) return;
+
+    console.log(newComponents);
+    if (!componentsValid || newComponents.length === 0) return;
+
+    dispatch({
+      type: DispatchActions.UPDATE_COMPONENTS,
+      payload: { components: newComponents },
+    });
     dispatch({
       type: DispatchActions.PROCEED,
     });
@@ -89,7 +99,6 @@ export default function FormConstructorBase() {
       });
     }
   };
-
   return (
     <div className={classes.page}>
       <FormConstructorHeader onAddComponent={addComponent} />
@@ -106,10 +115,7 @@ export default function FormConstructorBase() {
           <div className={classes.constructorCore}>
             {components.map(({ id, component, ref }) => (
               <SortableItem key={id} id={id}>
-                <EditComponentFactory
-                  component={component}
-                  ref={ref}
-                />
+                <EditComponentFactory component={component} ref={ref} />
               </SortableItem>
             ))}
           </div>

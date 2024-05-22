@@ -3,6 +3,7 @@ import { ComponentType, RadioComponent } from "@/misc/types";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import styles from "../FormComponent.module.css";
+import { useExposeHandle } from "@/misc/hooks";
 const RadioEdit = forwardRef(function RadioEdit(
   { label, choices }: RadioComponent,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.Radio>>
@@ -31,20 +32,7 @@ const RadioEdit = forwardRef(function RadioEdit(
     append("");
   };
 
-  useImperativeHandle<any, EditComponentHandleInterface<RadioComponent>>(
-    ref,
-    () => ({
-      validateComponent: () => {
-        handleSubmit(() => {})();
-      },
-      isValid: () => {
-        return isValid && getValues().choices.length !== 0;
-      },
-      getFormData: () => {
-        return getValues() as RadioComponent;
-      },
-    })
-  );
+  useExposeHandle(ref, { getValues, isValid, handleSubmit });
 
   return (
     <form

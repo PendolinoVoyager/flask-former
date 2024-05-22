@@ -1,16 +1,14 @@
-import {
-  ForwardedRef,
-  Ref,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { ForwardedRef, Ref, forwardRef, useImperativeHandle } from "react";
 import { CheckboxComponent, ComponentType } from "@/misc/types";
 import styles from "../FormComponent.module.css";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useExposeHandle } from "@/misc/hooks";
+interface _Props {
+  component: CheckboxComponent;
+}
 const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
-  { label, choices }: CheckboxComponent,
+  { component }: _Props,
   ref: ForwardedRef<EditComponentHandleInterface<ComponentType.CheckBox>>
 ) {
   const {
@@ -21,13 +19,13 @@ const CheckBoxComponentEdit = forwardRef(function CheckBoxComponentEdit(
     getValues,
   } = useForm({
     defaultValues: {
-      label,
-      choices,
-      type: ComponentType.CheckBox,
+      ...component,
+      choices: component.choices,
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
+  useExposeHandle(ref, { getValues, isValid, handleSubmit });
   const { fields, append, remove } = useFieldArray({
     control,
     //@ts-ignore
