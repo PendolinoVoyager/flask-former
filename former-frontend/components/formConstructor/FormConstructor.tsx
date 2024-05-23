@@ -10,28 +10,17 @@ import {
 } from "@/stores/formConstructorContext";
 import FormConstructorBase from "./FormConstructorBase";
 import FormConstructorFinish from "./FormConstructorFinish";
-import { fileToBase64 } from "@/misc/http";
 import classes from "./FormConstructor.module.css";
 function FormConstructorInternal() {
   const { state } = useContext(FormConstructorContext);
 
   const handleFormSubmit = async () => {
+    //TODO: Image files go where?
     const components = state.components.map((c) => c.component);
-    let encodedImage;
-
-    if (state.image) {
-      try {
-        encodedImage = await fileToBase64(state.image);
-      } catch (error) {
-        console.error("Error encoding image:", error);
-        encodedImage = undefined;
-      }
-    }
-
     const details = {
       name: state.name,
       key: state.key,
-      image: encodedImage as string,
+      image: state.image,
       description: state.description,
     };
 

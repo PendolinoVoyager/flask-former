@@ -34,22 +34,30 @@ export async function fetchForm(id: string): Promise<Form | Error> {
     return err as Error;
   }
 }
+interface SubmittedFormData {
+  components: FormComponentType[],
+  details: { name: string; key?: string; image?: File }
+}
 export async function submitForm(
   components: FormComponentType[],
-  details: { name: string; key?: string; image?: string; description?: string }
+  details: { name: string; key?: string; image?: File }
 ) {
-  cleanData(details);
-  components.forEach((c) => cleanData(c));
-  const body = JSON.stringify({
-    form: {
-      components,
-      ...details,
-    },
+  const formData = new FormData();
+  components.forEach((c) => {
+    formData.append("components", JSON.stringify(c));
   });
+  Object.keys(details).forEach((key) => {
+    if (key !== "image") {
+      //@ts-ignore
+      formData.append(key, details[key]);
+    } else if (details.image) {
+      formData.append("image", details.image, details.image.name);
+    }
+  });
+
   const res = await fetch(`${BASE_URL}/forms`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body,
+    body: formData,
   });
   if (!res.ok) throw new Error("Ooops! Couldn't create the form...");
   const json = await res.json();

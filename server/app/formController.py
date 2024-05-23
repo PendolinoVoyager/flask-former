@@ -62,22 +62,15 @@ class FormController:
                     raise ValueError(f"invalid component type: {component['type']}")
                 components.append(ComponentFactory.from_type(component['type'], **component))
         
-            if 'image' not in body:
-                body['image'] = 'placeholder.png'
+
+            if 'image' in request.files:
+                image = request.files['image']
+                image_filename = "test.jpg"
+                image_path = os.path.join(G_CONFIG["STATIC_DIR"], image_filename)
+                image.save(image_path)
+                body["image"] = image_filename
             else:
-                # image is a JSON blob so we need to extract it from the request
-                # imagefile = request.json.get
-                if imagefile:
-                    # #slugify the filename
-                    # imagefile.filename = slugify(imagefile.filename)
-                    # #add timestamp to the filename
-                    # imagefile.filename = f"{imagefile.filename.split('.')[0]}-{int(time.time())}.{imagefile.filename.split('.')[1]}"
-                    # imagefile.save(os.path.join(G_CONFIG['STATIC_DIR'], imagefile.filename))
-                    # body['image'] = imagefile.filename
-                    pass
-                else:
-                    body['image'] = 'placeholder.png'
-            # Additional checks and operations for image handling go here
+                body["image"] = 'placeholder.png'
 
             if body.get('key'):
                 body['key'] = Hasher.hash(body['key'])
