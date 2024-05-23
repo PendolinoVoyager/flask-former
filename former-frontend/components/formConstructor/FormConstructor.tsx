@@ -11,20 +11,28 @@ import {
 import FormConstructorBase from "./FormConstructorBase";
 import FormConstructorFinish from "./FormConstructorFinish";
 import classes from "./FormConstructor.module.css";
+import ErrorPage from "@/app/explore/error";
+import { fileToBase64 } from "@/misc/http";
 function FormConstructorInternal() {
   const { state } = useContext(FormConstructorContext);
 
   const handleFormSubmit = async () => {
-    //TODO: Image files go where?
+    let image = undefined;
+    if (state.image) {
+      image = (await fileToBase64(state.image)) as string;
+    }
     const components = state.components.map((c) => c.component);
     const details = {
       name: state.name,
       key: state.key,
-      image: state.image,
+      image,
       description: state.description,
     };
-
-    submitForm(components, details);
+    try {
+      submitForm(components, details);
+    } catch (e) {
+      ErrorPage();
+    }
   };
 
   switch (state.step) {

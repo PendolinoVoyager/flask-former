@@ -6,7 +6,7 @@ from globals import G_CONFIG
 from .helpers import error_wrapper
 RESULTS_PER_PAGE = G_CONFIG['RESULTS_PER_PAGE']
 import os
-
+import base64
 class FormController:
     
     @staticmethod 
@@ -47,6 +47,7 @@ class FormController:
     @staticmethod
     @error_wrapper
     def create_form(request):
+        
         try:
             body = request.json.get('form')
             if not body:
@@ -55,7 +56,6 @@ class FormController:
                 raise ValueError("name is required")
             if not body.get('components') or not len(body.get('components')):
                 raise ValueError("components are required")
-
             components = []
             for component in body['components']:
                 if component['type'] not in AVAILABLE_COMPONENTS:
@@ -63,12 +63,16 @@ class FormController:
                 components.append(ComponentFactory.from_type(component['type'], **component))
         
 
-            if 'image' in request.files:
-                image = request.files['image']
+            if 'image' in body:
+                print(body)
+                #.split(",") get's rid of b64 header
+                image = base64.b64decode(body["image"].split(',')[1])
                 image_filename = "test.jpg"
                 image_path = os.path.join(G_CONFIG["STATIC_DIR"], image_filename)
-                image.save(image_path)
+                with open(image_path, "wb") as f:
+                    f.write(image)
                 body["image"] = image_filename
+
             else:
                 body["image"] = 'placeholder.png'
 

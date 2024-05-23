@@ -1,10 +1,11 @@
 "use server";
 import { redirect } from "next/navigation";
-import { setTimeoutRequest, BASE_URL, cleanData } from "./http";
+import { setTimeoutRequest, BASE_URL, cleanData, fileToBase64 } from "./http";
 import { Form, FormComponentType } from "./types";
 import { AvailablePaths, constructPath } from "@/app/paths";
 import { revalidatePath } from "next/cache";
-
+import { filterXSS } from "xss";
+const xss = require("xss");
 export async function fetchForms(query?: string): Promise<Form[]> {
   let res: Response;
   if (!query)
@@ -34,30 +35,28 @@ export async function fetchForm(id: string): Promise<Form | Error> {
     return err as Error;
   }
 }
-interface SubmittedFormData {
-  components: FormComponentType[],
-  details: { name: string; key?: string; image?: File }
-}
+
 export async function submitForm(
   components: FormComponentType[],
-  details: { name: string; key?: string; image?: File }
+  details: { name: string; key?: string; image?: string; description?: string }
 ) {
-  const formData = new FormData();
-  components.forEach((c) => {
-    formData.append("components", JSON.stringify(c));
-  });
-  Object.keys(details).forEach((key) => {
-    if (key !== "image") {
-      //@ts-ignore
-      formData.append(key, details[key]);
-    } else if (details.image) {
-      formData.append("image", details.image, details.image.name);
-    }
-  });
+  cleanData(details);
+  Object.values(details).forEach((v) => filterXSS(v));
 
+  components.forEach((c) => {
+    cleanData(c);
+    Object.values(c).forEach((cv) => filterXSS(cv));
+  });
+  const body = JSON.stringify({
+    form: {
+      components,
+      ...details,
+    },
+  });
   const res = await fetch(`${BASE_URL}/forms`, {
     method: "POST",
-    body: formData,
+    headers: { "Content-Type": "application/json" },
+    body,
   });
   if (!res.ok) throw new Error("Ooops! Couldn't create the form...");
   const json = await res.json();

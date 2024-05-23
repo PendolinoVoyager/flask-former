@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET"] = os.getenv("SECRET")
     app.config["ENV"] = os.getenv("ENV")
-    app.static_folder = os.getenv("STATIC_DIR")
+    app.static_folder = f'../{os.getenv("STATIC_DIR")}'
     logging.basicConfig(filename=os.getenv("LOG_FILE"))
 
     # Set up CORS
