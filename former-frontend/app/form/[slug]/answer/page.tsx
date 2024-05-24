@@ -4,8 +4,7 @@ import classes from "./page.module.css";
 import RawHTMLForm from "@/components/forms/RawHTMLForm";
 import dynamic from "next/dynamic";
 
-// Placeholder component using hooks.
-// It will
+// Component rendered dunamically for SEO
 const FormExplorer = dynamic(() => import("@/components/forms/FormExplorer"), {
   ssr: false,
 });

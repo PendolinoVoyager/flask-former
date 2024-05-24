@@ -1,12 +1,9 @@
 import logging
 from .db.Form import Form
-from .db.Component import AVAILABLE_COMPONENTS, ComponentFactory
 from .Hasher import Hasher
 from globals import G_CONFIG
 from .helpers import error_wrapper
 RESULTS_PER_PAGE = G_CONFIG['RESULTS_PER_PAGE']
-import os
-import base64
 class FormController:
     
     @staticmethod 
@@ -49,40 +46,10 @@ class FormController:
     def create_form(request):
         
         try:
-            body = request.json.get('form')
-            if not body:
-                raise ValueError("form is required")
-            if not body.get('name'):
-                raise ValueError("name is required")
-            if not body.get('components') or not len(body.get('components')):
-                raise ValueError("components are required")
-            components = []
-            for component in body['components']:
-                if component['type'] not in AVAILABLE_COMPONENTS:
-                    raise ValueError(f"invalid component type: {component['type']}")
-                components.append(ComponentFactory.from_type(component['type'], **component))
-        
-
-            if 'image' in body:
-                print(body)
-                #.split(",") get's rid of b64 header
-                image = base64.b64decode(body["image"].split(',')[1])
-                image_filename = "test.jpg"
-                image_path = os.path.join(G_CONFIG["STATIC_DIR"], image_filename)
-                with open(image_path, "wb") as f:
-                    f.write(image)
-                body["image"] = image_filename
-
-            else:
-                body["image"] = 'placeholder.png'
-
-            if body.get('key'):
-                body['key'] = Hasher.hash(body['key'])
-
-            body['components'] = components
-            form = Form(**body)
-            Form.save(form)
-            return {"status": "success", "data": form.to_json()}, 201
+           body = request.json["form"]
+           form = Form.from_json(body)
+           form.save()
+           return {"status": "success", "data":  form.to_json()}, 201
         except ValueError as e:
             return {"status": "fail", "message": str(e)}, 400
         except Exception as e:

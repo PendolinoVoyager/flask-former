@@ -25,12 +25,12 @@ export interface Component {
 
 export interface TextComponent extends Component {
   type: ComponentType.Text;
-  defaultValue?: string;
+  default_value?: string;
 }
 
 export interface NumberComponent extends Component {
   type: ComponentType.Number;
-  defaultValue?: number;
+  default_value?: number;
   min?: number;
   max?: number;
   isInteger?: boolean;
@@ -46,15 +46,15 @@ export interface RadioComponent extends Component {
 }
 export interface DateTimeComponent extends Component {
   type: ComponentType.DateTime;
-  defaultValue?: string;
+  default_value?: string;
 }
 export interface TimeComponent extends Component {
   type: ComponentType.Time;
-  defaultValue?: string;
+  default_value?: string;
 }
 export interface DateComponent extends Component {
   type: ComponentType.Date;
-  defaultValue?: string;
+  default_value?: string;
 }
 export type FormComponentType =
   | TextComponent
@@ -74,13 +74,13 @@ export function createFormComponent(
         type: ComponentType.Text,
         label: "New Text",
         required: true,
-        defaultValue: "",
+        default_value: "",
       };
     case ComponentType.Number:
       return {
         type: ComponentType.Number,
         label: "New Number",
-        defaultValue: 0,
+        default_value: 0,
         required: true,
         isInteger: false,
       };
