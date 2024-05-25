@@ -1,13 +1,14 @@
 import { fetchForm } from "@/misc/actions";
 import { notFound } from "next/navigation";
-import classes from "./page.module.css";
 import RawHTMLForm from "@/components/forms/RawHTMLForm";
 import dynamic from "next/dynamic";
-
 // Component rendered dunamically for SEO
-const FormExplorer = dynamic(() => import("@/components/forms/FormExplorer"), {
-  ssr: false,
-});
+const FormAnswerable = dynamic(
+  () => import("@/components/forms/FormAnswerable"),
+  {
+    ssr: false,
+  }
+);
 
 type _LocalProps = {
   params: {
@@ -22,9 +23,9 @@ export default async function FormPage({ params }: _LocalProps) {
   }
 
   return (
-    <div className={classes.formPage}>
+    <div>
       <RawHTMLForm hidden form={form} />
-      <RawHTMLForm form={form} />
+      <FormAnswerable form={form} />
     </div>
   );
 }

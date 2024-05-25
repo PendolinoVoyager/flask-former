@@ -1,6 +1,4 @@
 from mongoengine import Document, ReferenceField, ListField, DateTimeField
-import time
-from app.db.Form import Form
 
 
 from mongoengine import Document, ReferenceField, ListField, DateTimeField
@@ -11,11 +9,12 @@ class FormAnswer(Document):
     answers = ListField()  # Flexible storage for any answer type
     submitted_at = DateTimeField(default=datetime.datetime.now(datetime.UTC))
 
-    def to_json(self):
+    def to_json(self, *args, **kwargs):
+
         return {
             "form_id": str(self.form.id),
             "answers": self.answers,
-            "submitted_at": self.submitted_at.isoformat()
+            "submitted_at": str(self.submitted_at.isoformat())
         }
 
 class AnswerValidator:
@@ -41,7 +40,7 @@ class AnswerValidator:
                         raise ValueError(f"Number exceeds the maximum allowed value of {component['max']}.")
                 else:
                   raise ValueError(f"Invalid number format for {component.label}.")
-        elif component.type == 'checkbox':
+        elif component.type == 'checkbox' or component.type == 'radio':
             if not all(opt in component['choices'] for opt in answer):
                 raise ValueError(f"Invalid checkbox option selected for {component.label}.")
         

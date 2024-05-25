@@ -124,6 +124,12 @@ export function getNativeHTMLInputType(component: ComponentType): string {
   if (component === ComponentType.DateTime) return "datetime-local";
   else return component;
 }
+export function isArrayField(componentType: ComponentType) {
+  return (
+    componentType === ComponentType.Radio ||
+    componentType === ComponentType.CheckBox
+  );
+}
 export enum ComponentMode {
   "edit",
   "static",

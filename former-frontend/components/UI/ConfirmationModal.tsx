@@ -3,7 +3,7 @@ import SquareButton from "./SquareButton";
 interface ConfirmationModalProps {
   isOpen: boolean;
   onConfirm: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   message: string;
 }
 const ConfirmationModal = ({
@@ -20,7 +20,10 @@ const ConfirmationModal = ({
         <div className="modal-content">
           <p>{message}</p>
           <div className="modal-actions center">
-            <SquareButton color="var(--color-danger)" onClick={onCancel}>
+            <SquareButton
+              color="var(--color-danger)"
+              onClick={onCancel ?? (() => {})}
+            >
               Cancel
             </SquareButton>
             <SquareButton color="var(--color-secondary)" onClick={onConfirm}>

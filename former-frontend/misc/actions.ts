@@ -63,3 +63,22 @@ export async function submitForm(
   revalidatePath(constructPath(AvailablePaths.ALL_FORMS));
   redirect(constructPath(AvailablePaths.FORM, json.data.id));
 }
+
+export async function answerForm(form: Form["id"], answers: any[]) {
+  console.log(form);
+  console.log(answers);
+  const res = await fetch(`${BASE_URL}/answers/${form}/answer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ answers }),
+  });
+  console.log(res);
+  if (!res.ok) throw new Error("Your answer didn't get through.");
+  const data = await res.json();
+  console.log(data);
+  if (data.status === "fail")
+    throw new Error("Something went wrong: " + data.message);
+  redirect(constructPath(AvailablePaths.ANALYTICS, form));
+}

@@ -68,7 +68,6 @@ class Form(Document):
 #saves the file to static and returns it's relative path
 def save_file(base64_encoded_string) -> str:
     # Decode the image data from base64
-    print(base64_encoded_string[0:10])
     image = base64.b64decode(base64_encoded_string.split(',')[1])
     # Generate a unique filename using UUID
     image_filename = f"{uuid.uuid4()}.jpg"

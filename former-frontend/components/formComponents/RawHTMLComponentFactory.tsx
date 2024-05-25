@@ -8,16 +8,20 @@ const createInputField = function (component: FormComponentType) {
     component.type === ComponentType.Radio ||
     component.type === ComponentType.CheckBox
   ) {
-    Input = component.choices.map((choice) => (
-      <>
-        <label>{choice}</label>
-        <input
-          name={component.label}
-          value={choice}
-          type={component.type}
-        ></input>
-      </>
-    ));
+    Input = (
+      <div className={classes.checkboxGroup}>
+        {component.choices.map((choice) => (
+          <div key={choice} className={classes.optionControls}>
+            <span>{choice}</span>
+            <input
+              name={component.label}
+              value={choice}
+              type={component.type}
+            ></input>
+          </div>
+        ))}
+      </div>
+    );
   } else if (component.type === ComponentType.Number) {
     Input = (
       <input
@@ -25,15 +29,15 @@ const createInputField = function (component: FormComponentType) {
         min={component.min}
         max={component.max}
         step={component.isInteger ? 1 : ""}
-        defaultValue={component.defaultValue}
+        defaultValue={component.default_value}
       ></input>
     );
   } else {
     Input = (
       <input
         type={component.type}
-        defaultValue={component.defaultValue}
-        placeholder={component.defaultValue}
+        defaultValue={component.default_value}
+        placeholder={component.default_value}
       ></input>
     );
   }
