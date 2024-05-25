@@ -80,5 +80,6 @@ export async function answerForm(form: Form["id"], answers: any[]) {
   console.log(data);
   if (data.status === "fail")
     throw new Error("Something went wrong: " + data.message);
+  revalidatePath(constructPath(AvailablePaths.ANALYTICS, form));
   redirect(constructPath(AvailablePaths.ANALYTICS, form));
 }

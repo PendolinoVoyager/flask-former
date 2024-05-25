@@ -4,9 +4,21 @@ import Image from "next/image";
 import classes from "./FormCard.module.css";
 import { AvailablePaths, PATH, constructPath } from "@/app/paths";
 import { Form } from "@/misc/types";
+import { useAppContext } from "@/stores/appContext";
+import { useState } from "react";
 
 export default function FormCard({ form }: { form: Form }) {
-  return (
+  const { addBookmark, removeBookmark, isBookmarked } = useAppContext();
+
+  const toggleBookmark = (id: string) => {
+    if (isBookmarked(id)) {
+      removeBookmark(id);
+    } else {
+      addBookmark(id);
+    }
+  };
+    return (
+      <>
     <Link
       className={classes["form-card"]}
       href={constructPath(AvailablePaths.FORM, form.id)}
@@ -26,5 +38,7 @@ export default function FormCard({ form }: { form: Form }) {
         <p>{form.description ?? "No description"}</p>
       </div>
     </Link>
+      <button onClick={toggleBookmark.bind(null, form.id)}>{!isBookmarked(form.id) ? "Bookmark" : "Is bookmarked!"}</button>
+      </>
   );
 }

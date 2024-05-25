@@ -1,5 +1,4 @@
 import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
-
 export function useAsyncLoad<T>(
   fn: () => Promise<T>,
   deps: any[]

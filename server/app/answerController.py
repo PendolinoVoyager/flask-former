@@ -2,7 +2,6 @@ from .db.Answer import AnswerValidator, FormAnswer
 from .helpers import error_wrapper
 from .db.Form import Form
 from mongoengine import DoesNotExist
-from flask import jsonify
 class AnswerController:
     @staticmethod
     @error_wrapper
