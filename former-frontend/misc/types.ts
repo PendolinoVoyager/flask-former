@@ -33,7 +33,7 @@ export interface NumberComponent extends Component {
   default_value?: number;
   min?: number;
   max?: number;
-  isInteger?: boolean;
+  is_integer?: boolean;
 }
 
 export interface CheckboxComponent extends Component {
@@ -82,7 +82,7 @@ export function createFormComponent(
         label: "New Number",
         default_value: 0,
         required: true,
-        isInteger: false,
+        is_integer: false,
       };
     case ComponentType.CheckBox:
       return {

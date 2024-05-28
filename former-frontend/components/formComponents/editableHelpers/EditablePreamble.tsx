@@ -1,10 +1,6 @@
 // f - you typescript
 //@ts-nocheck
-import {
-  Controller,
-  UseFormStateProps,
-  UseFormStateReturn,
-} from "react-hook-form";
+import { Controller } from "react-hook-form";
 import styles from "../FormComponent.module.css";
 import {
   ComponentType,
@@ -56,16 +52,18 @@ const EditablePreamble = function <T extends FormComponentType>({
           )}
         />
       </div>
+      {component.type !== ComponentType.CheckBox &&
+        component.type !== ComponentType.Radio && (
+          <>
       <div className={`${styles.label} ${styles.optionControls}`}>
         <span>Required</span>
         <input type="checkbox" {...register("required")} />
       </div>
-      {component.type !== ComponentType.CheckBox &&
-        component.type !== ComponentType.Radio && (
+
           <div>
             <span>Default Value</span>
             <Controller
-              name="defaultValue"
+              name="default_value"
               control={control}
               render={({ field }) => (
                 <input
@@ -73,10 +71,18 @@ const EditablePreamble = function <T extends FormComponentType>({
                   {...field}
                   type={getNativeHTMLInputType(component.type)}
                   placeholder="Edit default value"
+                  onChange={(event) =>
+                    field.onChange(
+                      component.type === ComponentType.Number
+                        ? +event.target.value
+                        : event.target.value
+                    )
+                  }
                 />
               )}
             />
           </div>
+          </>
         )}
     </>
   );

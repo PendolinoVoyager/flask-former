@@ -28,7 +28,7 @@ const createInputField = function (component: FormComponentType) {
         type={component.type}
         min={component.min}
         max={component.max}
-        step={component.isInteger ? 1 : ""}
+        step={component.is_integer ? 1 : ""}
         defaultValue={component.default_value}
       ></input>
     );

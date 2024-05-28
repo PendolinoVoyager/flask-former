@@ -29,7 +29,7 @@ export async function fileToBase64(file: File) {
 
 export function cleanData(obj: Object) {
   Object.entries(obj).forEach(([key, val]) => {
-    if (!val) {
+    if (val === undefined || val === null) {
       //@ts-ignore
       delete obj[key];
     }

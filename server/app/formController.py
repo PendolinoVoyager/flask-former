@@ -44,7 +44,6 @@ class FormController:
     @staticmethod
     @error_wrapper
     def create_form(request):
-        
         try:
            body = request.json["form"]
            form = Form.from_json(body)

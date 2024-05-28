@@ -40,13 +40,14 @@ export async function submitForm(
   components: FormComponentType[],
   details: { name: string; key?: string; image?: string; description?: string }
 ) {
+  console.log(components);
   cleanData(details);
   Object.values(details).forEach((v) => filterXSS(v));
-
   components.forEach((c) => {
     cleanData(c);
     Object.values(c).forEach((cv) => filterXSS(cv));
   });
+
   const body = JSON.stringify({
     form: {
       components,
@@ -58,15 +59,13 @@ export async function submitForm(
     headers: { "Content-Type": "application/json" },
     body,
   });
-  if (!res.ok) throw new Error("Ooops! Couldn't create the form...");
   const json = await res.json();
+  if (json.status === "fail") throw new Error(json.message);
   revalidatePath(constructPath(AvailablePaths.ALL_FORMS));
   redirect(constructPath(AvailablePaths.FORM, json.data.id));
 }
 
 export async function answerForm(form: Form["id"], answers: any[]) {
-  console.log(form);
-  console.log(answers);
   const res = await fetch(`${BASE_URL}/answers/${form}/answer`, {
     method: "POST",
     headers: {

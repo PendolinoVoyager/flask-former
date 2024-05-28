@@ -4,9 +4,11 @@ import { ForwardedRef, Ref, forwardRef, memo } from "react";
 import { EditComponentHandleInterface } from "@/components/formConstructor/FormConstructorBase";
 import { useEditableRHF } from "@/misc/hooks";
 import EditablePreamble from "../editableHelpers/EditablePreamble";
+
 interface _Props {
   component: NumberComponent;
 }
+
 const NumberEdit = memo(
   forwardRef(function NumberEdit(
     { component }: _Props,
@@ -14,6 +16,7 @@ const NumberEdit = memo(
   ) {
     const formState = useEditableRHF<NumberComponent>(ref, component);
     const { register, errors } = formState;
+
     return (
       <form
         className={`${styles.component} ${styles.editing}`}
@@ -25,40 +28,41 @@ const NumberEdit = memo(
 
         <div>
           <span>Min</span>
-
           <input
             className={`${styles.numberInput} ${
               errors.min ? styles.errorBorder : ""
             }`}
             {...register("min", {
               validate: (value: any) =>
-                //@ts-ignore
-                value == "" ||
-                //@ts-ignore
-                (!isNaN(parseFloat(value)) && isFinite(value)),
+                value == null ||
+                (!isNaN(parseFloat(value)) && isFinite(parseFloat(value))),
+              setValueAs: (value) =>
+                value === "" ? undefined : parseFloat(value),
             })}
             type="number"
             defaultValue={component.min}
             placeholder="Edit min value"
-            step={component.isInteger ? 1 : "any"}
+            step={component.is_integer ? 1 : "any"}
           />
         </div>
+
         <div>
           <span>Max</span>
-
           <input
             className={`${styles.numberInput} ${
               errors.max ? styles.errorBorder : ""
             }`}
             {...register("max", {
               validate: (value: any) =>
-                //@ts-ignore
-                value == "" || (!isNaN(parseFloat(+value)) && isFinite(value)),
+                value == null ||
+                (!isNaN(parseFloat(value)) && isFinite(parseFloat(value))),
+              setValueAs: (value) =>
+                value === "" ? undefined : parseFloat(value),
             })}
             type="number"
             defaultValue={component.max}
             placeholder="Edit max value"
-            step={component.isInteger ? 1 : "any"}
+            step={component.is_integer ? 1 : "any"}
           />
         </div>
 
@@ -66,12 +70,13 @@ const NumberEdit = memo(
           <span>Integer only</span>
           <input
             type="checkbox"
-            defaultChecked={component.isInteger}
-            {...register("isInteger")}
+            defaultChecked={component.is_integer}
+            {...register("is_integer")}
           />
         </div>
       </form>
     );
   })
 );
+
 export default NumberEdit;

@@ -19,7 +19,7 @@ const DateTimeEdit = forwardRef(function DateEdit(
       ref={ref as Ref<HTMLFormElement>}
     >
       <EditablePreamble component={component} formState={formState as any}>
-        Date field
+        Date and time field
       </EditablePreamble>
     </form>
   );

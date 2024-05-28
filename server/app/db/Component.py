@@ -16,48 +16,50 @@ class TextComponent(Component):
     def __init__(self, **kwargs):
         super().__init__()
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', None)
+        self.required = kwargs.get('required')
+        self.default_value = kwargs.get('default_value')
     def JSON_serialize(self):
-       return {
+        print(self.required)
+        return {
            "type": "text",
            "label": self.label,
-           "default_value": self.default_value
+           "default_value": self.default_value,
+           "required": self.required
        }
 
 class CheckboxComponent(Component):
     type = "checkbox"
     choices = ListField(StringField(max_length=50), max_length=64)
-    default_value = IntField(min_value=1, max_value=choices.max_length)
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', 1)
         self.choices = kwargs.get('choices')
+        self.required = kwargs.get('required', False)
 
     def JSON_serialize(self):
         return {
             "type": "checkbox",
             "label": self.label,
-            "default_value": self.default_value,
-            "choices": self.choices
+            "choices": self.choices,
+            "required": self.required
         }
 class RadioComponent(Component):
     type = "radio"
     choices = ListField(StringField(max_length=50), max_length=64)
-    default_value = IntField(min_value=1, max_value=choices.max_length)
 
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self.label = kwargs.get('label')
-        self.default_value = kwargs.get('default_value', None)
         self.choices = kwargs.get('choices')
+        self.required = kwargs.get('required', False)
+
     choices = ListField(StringField(max_length=50), max_length=64)
     def JSON_serialize(self):
         return {
             "type": "radio",
             "label": self.label,
-            "default_value": self.default_value,
-            "choices": self.choices
+            "choices": self.choices,
+            
         }
 class NumberComponent(Component):
     type = "number"
@@ -68,15 +70,18 @@ class NumberComponent(Component):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self.label = kwargs.get('label')
-        self.min = kwargs.get('min', None)
-        self.max = kwargs.get('max', None)
+        self.min = kwargs.get('min')
+        self.max = kwargs.get('max')
+        self.required = kwargs.get('required', False)
+
         self.is_integer = kwargs.get('is_integer', False)
-        self.default_value = kwargs.get('default_value', None)
+        self.default_value = kwargs.get('default_value')
     def JSON_serialize(self):
         return {
             "type": "number",
             "label": self.label,
             "default_value": self.default_value,
+            "required": self.required,
             "min": self.min,
             "max": self.max,
             "is_integer": self.is_integer
@@ -87,6 +92,8 @@ class DateComponent(Component):
     default_value = DateField()
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.required = kwargs.get('required', False)
+
         self.label = kwargs.get('label')
         self.default_value = self.validate_date(kwargs.get('default_value'))
 
@@ -100,7 +107,7 @@ class DateComponent(Component):
                 # Attempt to parse the date string
                 return datetime.datetime.strptime(value, '%Y-%m-%d').date()
             except ValueError:
-                raise ValueError("Invalid date string format, expected YYYY-MM-DD")
+                return None
         else:
             return None
 
@@ -108,36 +115,47 @@ class DateComponent(Component):
         return {
             "type": "date",
             "label": self.label,
-            "default_value": self.default_value.isoformat() if self.default_value else None
+            "default_value": self.default_value.isoformat() if self.default_value else None,
+            "required": self.required,
         }
 class TimeComponent(Component):
     type = "time"
-    default_value = IntField(0, 1439)
+    default_value = StringField()  # Default value in HH:MM format
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.label = kwargs.get('label')
         self.default_value = self.validate_time(kwargs.get('default_value'))
+        self.required = kwargs.get('required', False)
 
     @staticmethod
     def validate_time(value):
-        if isinstance(value, int) and 0 <= value < 1440:
-            return value
+        if value is None: return None
+        if isinstance(value, str):
+            try:
+                # Validate the time format
+                datetime.datetime.strptime(value, '%H:%M')
+                return value
+            except ValueError:
+                raise ValueError("Invalid time format, must be in HH:MM format")
         else:
-            raise ValueError("Invalid time value, must be an integer representing minutes from 0 to 1439")
-
+            raise ValueError("Invalid time value, must be a string in HH:MM format")
     def JSON_serialize(self):
         return {
             "type": "time",
             "label": self.label,
-            "default_value": self.default_value
+            "default_value": self.default_value,
+            "required": self.required,
         }
 
 class DateTimeComponent(Component):
     type = "datetime"
     default_value = DateTimeField()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.required = kwargs.get('required', False)
+
         self.label = kwargs.get('label')
         self.default_value = self.validate_datetime(kwargs.get('default_value'))
 
@@ -149,7 +167,7 @@ class DateTimeComponent(Component):
         elif isinstance(value, str):
             try:
                 # Attempt to parse the datetime string
-                return datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')
+                return datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M')
             except ValueError:
                 raise ValueError("Invalid datetime string format, expected YYYY-MM-DDTHH:MM:SS")
         else:
@@ -159,7 +177,8 @@ class DateTimeComponent(Component):
         return {
             "type": "datetime",
             "label": self.label,
-            "default_value": self.default_value.isoformat() if self.default_value else None
+            "default_value": self.default_value.isoformat() if self.default_value else None,
+            "required": self.required,
         }
 
 AVAILABLE_COMPONENTS = ["text", "checkbox", "radio",
@@ -174,6 +193,7 @@ class ComponentFactory:
                 raise ValueError(f"Field {field} is required")
         match type:
             case "text":
+                print(kwargs)
                 return TextComponent(**kwargs)
             case "checkbox":
                 if 'choices' not in kwargs:

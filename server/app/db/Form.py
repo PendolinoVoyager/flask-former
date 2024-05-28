@@ -46,7 +46,6 @@ class Form(Document):
             if component['type'] not in AVAILABLE_COMPONENTS:
                 raise ValueError(f"invalid component type: {component['type']}")
             components.append(ComponentFactory.from_type(component['type'], **component))
-
         # Prepare response dictionary without mutating the original body
         formDict = {
             "name": body['name'],
@@ -62,7 +61,7 @@ class Form(Document):
         # Hash key if present
         if "key" in body:
             formDict['key'] = Hasher.hash(body['key'])
-
+        print(formDict["components"][0].JSON_serialize())
         form = Form(**formDict)
         return form
 #saves the file to static and returns it's relative path

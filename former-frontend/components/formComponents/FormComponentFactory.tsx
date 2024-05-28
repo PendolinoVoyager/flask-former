@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   ComponentType,
@@ -54,9 +55,9 @@ const createInputField = function (
           component.type === ComponentType.Number ? component.max : undefined
         }
         step={
-          component.type === ComponentType.Number && component.isInteger
+          component.type === ComponentType.Number && component.is_integer
             ? 1
-            : undefined
+            : "any"
         }
         defaultValue={component.default_value}
         //@ts-ignore
