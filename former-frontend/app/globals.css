@@ -170,3 +170,26 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
 }
+.pop-on-click:active {
+  animation: pop 0.3s;
+}
+.pop-on-click {
+  overflow: visible;
+}
+@keyframes pop {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.2, 1.2);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+.bookmark {
+  font-size: 2rem;
+  display: inline;
+  margin-left: 0;
+  position: relative;
+}
