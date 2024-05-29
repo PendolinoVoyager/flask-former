@@ -72,11 +72,9 @@ pub mod components {
 }
 
 pub mod answer {
-    use bson::{oid::ObjectId, Bson};
+    use bson::oid::ObjectId;
 
     use serde::{Deserialize, Serialize};
-
-    use super::{analysis::AnalysisRequest, criteria::Criteria};
 
     #[derive(Debug, Serialize, Deserialize)]
     pub struct FormAnswer {
@@ -84,58 +82,6 @@ pub mod answer {
         pub form: ObjectId,
         pub answers: Vec<bson::Bson>,
         pub submitted_at: bson::DateTime,
-    }
-
-    impl FormAnswer {
-        pub fn analyze(&self, analysis_requests: Vec<AnalysisRequest>) -> Vec<bool> {
-            analysis_requests
-                .iter()
-                .map(|request| {
-                    // Answer is the factual answer. We don't know what it refers to.
-                    // Theres a need to somehow get the hold of ComponentType and
-                    // Implement the method on it.
-                    // The criteria method should return option to prevent invalid criteria
-                    let answer = &self.answers[request.component_index];
-                    match request.criteria {
-                        Criteria::Equals => {
-                            if let Bson::String(ref ans) = answer {
-                                request.equals(ans)
-                            } else {
-                                false
-                            }
-                        }
-                        Criteria::LessThan => {
-                            if let Bson::Double(ans) = answer {
-                                request.less_than(ans)
-                            } else {
-                                false
-                            }
-                        }
-                        Criteria::GreaterThan => {
-                            if let Bson::Double(ans) = answer {
-                                request.greater_than(ans)
-                            } else {
-                                false
-                            }
-                        }
-                        Criteria::StringMatch => {
-                            if let Bson::String(ref ans) = answer {
-                                request.string_match(&Regex::new(ans).unwrap())
-                            } else {
-                                false
-                            }
-                        }
-                        Criteria::OptionChoice => {
-                            if let Bson::Int32(ans) = answer {
-                                request.option_choice(*ans as usize)
-                            } else {
-                                false
-                            }
-                        }
-                    }
-                })
-                .collect()
-        }
     }
 }
 
@@ -155,16 +101,25 @@ pub mod form {
 }
 
 pub mod analysis {
+    use crate::analize::criteria::Criteria;
     use bson::oid::ObjectId;
     use serde::{Deserialize, Serialize};
 
-    use super::criteria::Criteria;
-
-    #[derive(Debug, Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize)]
     pub struct AnalysisRequest {
         pub criteria: Criteria,
         pub component_index: usize,
     }
+    use std::fmt;
+    impl fmt::Debug for AnalysisRequest {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("AnalysisRequest")
+                .field("component_index", &self.component_index)
+                .field("criteria", &"Dynamic Analyzer Trait Object")
+                .finish()
+        }
+    }
+
     #[derive(Debug, Serialize, Deserialize)]
     pub struct FormAnalysis {
         pub _id: ObjectId,
@@ -172,40 +127,7 @@ pub mod analysis {
         pub answers_included: usize,
         pub created: i64,
         pub updated: u64,
-        pub analysis_request: Vec<AnalysisRequest>,
+        pub analysis_requests: Vec<AnalysisRequest>,
         pub by_component: Vec<f64>,
-    }
-}
-
-pub mod criteria {
-    use bson::Regex;
-    use serde::{Deserialize, Serialize};
-
-    #[derive(Debug, Serialize, Deserialize)]
-    pub enum Criteria {
-        Equals,
-        LessThan,
-        GreaterThan,
-        StringMatch,
-        OptionChoice,
-    }
-    pub trait Equals {
-        fn equals<T>(&self, value: T) -> bool;
-    }
-
-    pub trait LessThan {
-        fn less_than<T>(&self, value: T) -> bool;
-    }
-
-    pub trait GreaterThan {
-        fn greater_than<T>(&self, value: T) -> bool;
-    }
-
-    pub trait StringMatch {
-        fn string_match(&self, value: &Regex) -> bool;
-    }
-
-    pub trait OptionChoice {
-        fn option_choice(&self, index: usize) -> bool;
     }
 }
