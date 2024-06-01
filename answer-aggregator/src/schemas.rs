@@ -101,7 +101,7 @@ pub mod form {
 }
 
 pub mod analysis {
-    use crate::analize::criteria::Criteria;
+    use crate::analyze::criteria::Criteria;
     use bson::oid::ObjectId;
     use serde::{Deserialize, Serialize};
 
@@ -125,8 +125,6 @@ pub mod analysis {
         pub _id: ObjectId,
         pub form: ObjectId,
         pub answers_included: usize,
-        pub created: i64,
-        pub updated: u64,
         pub analysis_requests: Vec<AnalysisRequest>,
         pub by_component: Vec<f64>,
     }
