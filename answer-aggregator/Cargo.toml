@@ -12,3 +12,5 @@ futures = "0.3"
 tokio = { version = "1.0", features = ["full"] }
 chrono = "0.4.38"
 bson = "2.10.0"
+uuid = "1.8.0"
+regex = "1.10.4"

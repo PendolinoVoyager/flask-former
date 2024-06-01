@@ -19,7 +19,6 @@ class TextComponent(Component):
         self.required = kwargs.get('required')
         self.default_value = kwargs.get('default_value')
     def JSON_serialize(self):
-        print(self.required)
         return {
            "type": "text",
            "label": self.label,
@@ -193,7 +192,6 @@ class ComponentFactory:
                 raise ValueError(f"Field {field} is required")
         match type:
             case "text":
-                print(kwargs)
                 return TextComponent(**kwargs)
             case "checkbox":
                 if 'choices' not in kwargs:

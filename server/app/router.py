@@ -1,11 +1,9 @@
 from flask import Blueprint, jsonify, request
 
-from app.db.Answer import AnswerValidator, FormAnswer
-from app.db.Form import Form
-from .formController import FormController
-from .answerController import AnswerController
-from mongoengine import DoesNotExist
 
+from formController import FormController
+from answerController import AnswerController
+from aggregatorController import AggregatorController
 v1_router_forms = Blueprint('user', __name__, url_prefix='/api/v1/forms')
 #This file contains route definitions for /api/v1. Route actions in FormController
 
@@ -49,3 +47,9 @@ def submit_answer(form_id):
     res, status = AnswerController.answerForm(request, form_id)
     return jsonify(res), status
 
+
+v1_router_analysis = Blueprint('/api/v1/analysis', __name__, url_prefix='/api/v1/analysis')
+@v1_router_analysis.route('/<form_id>/by_criteria', methods=["GET", "POST"])
+def aggregate_by_criteria(form_id):
+    res, status = AggregatorController.byCriteria(request, form_id)
+    return jsonify(res), status

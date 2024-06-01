@@ -2,11 +2,10 @@ import base64
 import os
 from mongoengine import Document, StringField, EmbeddedDocumentListField, IntField
 
-from ..Hasher import Hasher
+from Hasher import Hasher
 from globals import G_CONFIG
 from .Component import AVAILABLE_COMPONENTS, Component, ComponentFactory
 from time import time
-from slugify import slugify
 import uuid
 
 class Form(Document):
@@ -61,7 +60,6 @@ class Form(Document):
         # Hash key if present
         if "key" in body:
             formDict['key'] = Hasher.hash(body['key'])
-        print(formDict["components"][0].JSON_serialize())
         form = Form(**formDict)
         return form
 #saves the file to static and returns it's relative path

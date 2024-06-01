@@ -5,6 +5,7 @@ import { Form, FormComponentType } from "./types";
 import { AvailablePaths, constructPath } from "@/app/paths";
 import { revalidatePath } from "next/cache";
 import { filterXSS } from "xss";
+import { AnalysisRequest } from "./types";
 const xss = require("xss");
 export async function fetchForms(query?: string): Promise<Form[]> {
   let res: Response;
@@ -81,4 +82,26 @@ export async function answerForm(form: Form["id"], answers: any[]) {
     throw new Error("Something went wrong: " + data.message);
   revalidatePath(constructPath(AvailablePaths.ANALYTICS, form));
   redirect(constructPath(AvailablePaths.ANALYTICS, form));
+}
+export async function analyticsByCriteria(
+  form: Form["id"],
+  request: AnalysisRequest[]
+) {
+  const body = {
+    analysis_requests: request,
+  };
+  console.log(body);
+  const res = await fetch(`${BASE_URL}/analysis/${form}/by_criteria`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+    },
+    body: JSON.stringify(body),
+  });
+  const res_json = await res.json();
+  console.log(res_json);
+  if (res_json.status === "fail")
+    throw new Error(res_json.message ?? "Something went wrong!");
+  return res_json.data;
 }

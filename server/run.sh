@@ -21,4 +21,4 @@ if [ -z "$hasFlask" ]; then
 fi
 
 # Run the Flask app using the run.py script
-python run.py
+python ./app/run.py

@@ -1,8 +1,8 @@
 import logging
-from .db.Form import Form
-from .Hasher import Hasher
+from db.Form import Form
+from Hasher import Hasher
 from globals import G_CONFIG
-from .helpers import error_wrapper
+from helpers import error_wrapper
 RESULTS_PER_PAGE = G_CONFIG['RESULTS_PER_PAGE']
 class FormController:
     

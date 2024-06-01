@@ -1,15 +1,16 @@
 export default function Footer() {
   return (
     <footer>
-      <p>&copy; 2024 Form Creator</p>
-      <h1>TODO</h1>
-      <ul>
-        <li>Browse forms + search / filter</li>
-        <li>Form answer</li>
-        <li>Bookmarks</li>
-        <li>Create form</li>
-        <li>View analytics</li>
-      </ul>
+      <div>
+        <h2>Additional info&#32;</h2>
+        <p>&copy; 2024 Form Creator</p>
+      </div>
+      <p>
+        This app is barely functional, not even alpha 0.01. Don&apos;t use it.
+        Seriously. I&apos; just writing in this footer to pad the text. Form
+        analytics don&apos;t work outside the API which is convoluted. Why are
+        you reading this?
+      </p>
     </footer>
   );
 }

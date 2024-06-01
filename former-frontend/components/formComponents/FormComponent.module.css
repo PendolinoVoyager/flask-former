@@ -28,7 +28,8 @@
   border: 1px solid #bebebe;
   border-radius: 4px;
 }
-.component input[type="checkbox"] {
+.component input[type="checkbox"],
+.component input[type="radio"] {
   height: 2rem;
   width: 2rem;
   padding: 0;

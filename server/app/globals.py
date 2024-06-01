@@ -9,4 +9,6 @@ G_CONFIG = {
     "STATIC_DIR": os.path.join(os.getcwd(), os.getenv("STATIC_DIR")),
     "RESULTS_PER_PAGE": 10,
     "WEBSITE_HOST": os.getenv('WEBSITE_HOST'),
+    "AGGREGATOR_HOST": os.getenv('AGGREGATOR_HOST'),
+    "AGGREGATOR_PORT": int(os.getenv('AGGREGATOR_PORT')),
 }

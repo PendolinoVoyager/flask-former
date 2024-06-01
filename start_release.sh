@@ -1,11 +1,10 @@
 #!/bin/bash
 
-echo "Starting the database service..."
-./run_db.sh
+sudo ./run_db.sh
 
 cd ./answer-aggregator
 echo "Starting the Rust application..."
-cargo run &
+cargo run --release &
 RUST_PID=$!
 cd ..
 
@@ -16,7 +15,8 @@ PYTHON_PID=$!
 cd ..
 
 cd ./former-frontend
-npm run dev &
+npm run build
+npm start &
 NEXT_PID=$!
 
 # Optionally wait for all processes to exit (if you need the script to stay open)

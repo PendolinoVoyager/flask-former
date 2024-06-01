@@ -135,3 +135,19 @@ export enum ComponentMode {
   "static",
   "answer",
 }
+export enum Criteria {
+  Equals = "Equals",
+  GreaterThan = "GreaterThan",
+  LessThan = "LessThan",
+  RegexMatch = "RegexMatch",
+  TimeBefore = "TimeBefore",
+  DateBefore = "DateBefore",
+  OptionChoice = "OptionChoice",
+}
+export type AnalysisRequest = {
+  component_index: number;
+  criteria: {
+    type: Criteria;
+    value: any;
+  };
+};

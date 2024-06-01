@@ -1,8 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from .router import v1_router_forms, v1_router_answers
-from .db.db_init import connect as db_connect
+from db.db_init import connect as db_connect
 from http.client import HTTPException
+from aggregator.extension import AggregatorClientExtension
 import os
 import logging
 
@@ -21,9 +21,9 @@ def create_app():
     if db_connect(os.getenv('DB_URI')) is None:
         print("Cannot connect to database, exiting...")
         exit(1)
-    # Register blueprints
-    app.register_blueprint(v1_router_forms)
-    app.register_blueprint(v1_router_answers)
+    #Init extensions
+    aggregator_extension = AggregatorClientExtension(app)
+    
 
     @app.route('/images/<path>', methods=['GET'])
     def get_image(path):

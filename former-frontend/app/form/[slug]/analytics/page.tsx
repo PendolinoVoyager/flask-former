@@ -1,11 +1,13 @@
 import { IMAGE_URL } from "@/misc/http";
-import { fetchForm } from "@/misc/actions";
+import { analyticsByCriteria, fetchForm } from "@/misc/actions";
+import { AnalysisRequest, Criteria } from "@/misc/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import classes from "./page.module.css";
-import { AvailablePaths, PATH, constructPath } from "@/app/paths";
-import Link from "next/link";
 import SquareButton from "@/components/UI/SquareButton";
+import Link from "next/link";
+import { AvailablePaths, constructPath } from "@/app/paths";
+
 type _LocalProps = {
   params: {
     slug: string;
@@ -13,12 +15,24 @@ type _LocalProps = {
 };
 export default async function FormPage({ params }: _LocalProps) {
   const form = await fetchForm(params.slug);
-  console.log(form);
   if (form instanceof Error) {
     notFound();
   }
+  const req: AnalysisRequest[] = Object.values(form.components).map((c, i) => {
+    return {
+      component_index: i,
+      criteria: {
+        type: Criteria.Equals,
+        value: "TEST",
+      },
+    } as AnalysisRequest;
+  });
+  const analysis = await analyticsByCriteria(form.id, req);
   return (
     <div className={classes.formPage}>
+      <Link href={constructPath(AvailablePaths.FORM, form.id)}>
+        <SquareButton color="var(--color-warning)">Go back</SquareButton>
+      </Link>
       <div className={classes.imageWrapper}>
         <Image
           src={`${IMAGE_URL}/${form.image}`}
@@ -35,12 +49,12 @@ export default async function FormPage({ params }: _LocalProps) {
             {form.description ?? "No description provided."}
           </p>
         </div>
-          <Link href={constructPath(AvailablePaths.ANSWER, form.id)}>
-            <SquareButton>Take the form</SquareButton>
-          </Link>
-          <Link href={constructPath(AvailablePaths.ANALYTICS, form.id)}>
-            <SquareButton color="var(--color-primary)">Analytics</SquareButton>
-          </Link>
+        {analysis &&
+          analysis.data &&
+          Array.isArray(analysis.data) &&
+          analysis.data.map((f: any) => {
+            <span>{f}</span>;
+          })}
       </section>
     </div>
   );

@@ -4,7 +4,7 @@
   margin: 0;
 }
 html {
-  --color-primary: #d13b00;
+  --color-primary: #33cc33;
   --color-secondary: #00c451;
   --color-success: #28a745;
   --color-danger: #dc3545;
@@ -192,4 +192,12 @@ h1 {
   display: inline;
   margin-left: 0;
   position: relative;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+}
+footer h2 {
+  color: var(--color-primary);
 }
