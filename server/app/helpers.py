@@ -2,7 +2,7 @@ import base64
 import os
 import uuid
 
-from server.app.globals import G_CONFIG
+from globals import G_CONFIG
 def error_wrapper(action):
     def wrapper(*args, **kwargs):
         try:
