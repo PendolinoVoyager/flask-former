@@ -3,5 +3,5 @@ flask
 mongomock
 mongoengine
 bcrypt
-flask-cors
+Flask-Cors
 slugify
